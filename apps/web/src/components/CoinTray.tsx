@@ -58,7 +58,12 @@ type Mode =
   | { kind: "hand"; intensity: number; jitter: Pose[] }
   | { kind: "toss"; plans: TossPlan[]; start: number; landed: boolean[]; onLand?: (i: number) => void; resolve: () => void };
 
-export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: boolean }>(function CoinTray({ className = "", fill = false }, ref) {
+export type Wood = "worn" | "dark";
+
+export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: boolean; wood?: Wood }>(function CoinTray(
+  { className = "", fill = false, wood = "worn" },
+  ref,
+) {
   const scene = useRef<HTMLDivElement>(null);
   const plane = useRef<HTMLDivElement>(null);
   const coins = useRef<(HTMLDivElement | null)[]>([]);
@@ -216,6 +221,7 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: 
     <div
       ref={scene}
       className={`table-scene ${fill ? "table-scene-fill" : ""} ${className}`}
+      data-wood={wood}
       style={fill ? undefined : { width: TABLE_W, height: TABLE_H * 0.62 + 90 }}
     >
       <div ref={plane} className="table-plane" style={{ width: TABLE_W, height: TABLE_H }}>

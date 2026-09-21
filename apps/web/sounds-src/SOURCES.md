@@ -18,3 +18,12 @@
 Freesound 的文件是站点提供的 HQ 预览 MP3（原始 WAV 需登录下载）；许可以各声音页面标注为准，均为 CC0。
 
 处理：`afconvert` 转 44.1k 单声道 → `scripts/slice-sounds.py` 按起音切片、归一化 → AAC 96k 写入 `public/sounds/lib/`。
+
+# 桌面木纹来源
+
+均为 PolyHaven，CC0 1.0，1k 漫反射贴图，下载日期 2026-09-21。
+
+| 文件 | 来源 |
+|---|---|
+| public/textures/wood_table_worn.jpg | https://polyhaven.com/a/wood_table_worn |
+| public/textures/dark_wood.jpg | https://polyhaven.com/a/dark_wood |

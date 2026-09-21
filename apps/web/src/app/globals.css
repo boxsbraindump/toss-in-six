@@ -66,13 +66,17 @@ body {
   /* 桌面向远处和两侧延伸出画，只有近边在屏幕里 */
   inset: -900px -400px 0 -400px;
   border-radius: 0 0 4px 4px;
-  background:
-    radial-gradient(ellipse 70% 60% at 50% 40%, rgba(255, 220, 160, 0.10), transparent 70%),
-    repeating-linear-gradient(97deg, rgba(0, 0, 0, 0.10) 0 2px, transparent 2px 9px, rgba(0, 0, 0, 0.06) 9px 11px, transparent 11px 23px),
-    repeating-linear-gradient(94deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 5px),
-    linear-gradient(180deg, #3a2a1c, #2c1f14 60%, #241a11);
+  /* 真实木纹照片（PolyHaven，CC0）平铺，上面压一层暗色，近处留一点暖光 */
+  background-image:
+    radial-gradient(ellipse 55% 45% at 50% 88%, rgba(255, 214, 150, 0.16), transparent 70%),
+    linear-gradient(rgba(10, 6, 3, 0.42), rgba(10, 6, 3, 0.42)),
+    var(--wood);
+  background-size: auto, auto, 420px 420px;
+  background-position: center, center, 30px 0;
   box-shadow: 0 6px 0 #1a1109, 0 30px 40px -12px rgba(0, 0, 0, 0.9);
 }
+.table-scene { --wood: url("/textures/wood_table_worn.jpg"); }
+.table-scene[data-wood="dark"] { --wood: url("/textures/dark_wood.jpg"); }
 /* 远处没入黑暗：贴在桌面上、越远越黑的雾 */
 .table-fog {
   position: absolute;

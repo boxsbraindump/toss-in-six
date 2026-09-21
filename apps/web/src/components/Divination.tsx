@@ -4,7 +4,7 @@ import { cast, tossLine, type CastResult, type CoinToss, type LineValue } from "
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { buzz, chime, ensureAudio, isMuted, rare, setMuted, settle, startShake, type ShakeHandle } from "@/lib/audio";
-import { CoinTray, type CoinTrayHandle } from "./CoinTray";
+import { CoinTray, type CoinTrayHandle, type Wood } from "./CoinTray";
 import { HexagramChart } from "./HexagramChart";
 
 type Stage = "ask" | "toss" | "result";
@@ -43,13 +43,29 @@ export function Divination() {
   const [castAt, setCastAt] = useState<Date | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [muted, setMutedState] = useState(false);
+  const [wood, setWood] = useState<Wood>("worn");
 
   // 服务端渲染没有 localStorage，挂载后再读，避免 hydration 不一致
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHistory(loadHistory());
     setMutedState(isMuted());
+    try {
+      if (localStorage.getItem("liuyao:wood") === "dark") setWood("dark");
+    } catch {
+      /* ignore */
+    }
   }, []);
+
+  function toggleWood() {
+    const next: Wood = wood === "worn" ? "dark" : "worn";
+    setWood(next);
+    try {
+      localStorage.setItem("liuyao:wood", next);
+    } catch {
+      /* ignore */
+    }
+  }
 
   const result: CastResult | null = useMemo(() => {
     if (values.length !== 6 || !castAt) return null;
@@ -115,6 +131,11 @@ export function Divination() {
           <Link href="/sound" className="hover:text-bone">
             采样
           </Link>
+          {stage === "toss" && (
+            <button onClick={toggleWood} className="hover:text-bone">
+              木纹 {wood === "worn" ? "老桌" : "深纹"}
+            </button>
+          )}
           {stage !== "ask" && (
             <button onClick={reset} className="hover:text-bone">
               再问一卦
@@ -128,7 +149,7 @@ export function Divination() {
       )}
 
       {stage === "toss" && (
-        <TossStage question={question} values={values} onLine={(v) => setValues((prev) => [...prev, v])} />
+        <TossStage question={question} values={values} wood={wood} onLine={(v) => setValues((prev) => [...prev, v])} />
       )}
 
       {stage === "result" && result && <HexagramChart key={castAt?.getTime()} result={result} />}
@@ -209,7 +230,7 @@ function AskStage({
 
 type Phase = "idle" | "holding" | "flying" | "landed";
 
-function TossStage({ question, values, onLine }: { question: string; values: LineValue[]; onLine: (v: LineValue) => void }) {
+function TossStage({ question, values, wood, onLine }: { question: string; values: LineValue[]; wood: Wood; onLine: (v: LineValue) => void }) {
   const tray = useRef<CoinTrayHandle>(null);
   const [phase, setPhase] = useState<Phase>("idle");
   const [last, setLast] = useState<{ coins: CoinToss; value: LineValue } | null>(null);
@@ -330,7 +351,7 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
           done || phase === "flying" ? "cursor-default" : "cursor-grab active:cursor-grabbing"
         }`}
       >
-        <CoinTray ref={tray} fill />
+        <CoinTray ref={tray} fill wood={wood} />
       </div>
 
       {/* 底部只留一行字和六个点 */}
