@@ -1,6 +1,7 @@
 "use client";
 
 import { cast, tossLine, type CastResult, type CoinToss, type LineValue } from "@liuyao/core";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { buzz, chime, clink, ensureAudio, isMuted, land, rare, setMuted } from "@/lib/audio";
 import { CoinTray, type CoinTrayHandle } from "./CoinTray";
@@ -112,6 +113,9 @@ export function Divination() {
           <button onClick={toggleMute} aria-pressed={muted} className="hover:text-bone">
             {muted ? "声音 关" : "声音 开"}
           </button>
+          <Link href="/sound" className="hover:text-bone">
+            音色
+          </Link>
           {stage !== "ask" && (
             <button onClick={reset} className="hover:text-bone">
               再问一卦
