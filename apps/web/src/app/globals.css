@@ -39,31 +39,32 @@ body {
   outline-offset: 3px;
 }
 
-/* 铜钱翻转 */
+/* 铜钱：3D 翻转由 Web Animations API 驱动，这里只放静态结构 */
 .coin-scene {
   perspective: 700px;
 }
 .coin {
   transform-style: preserve-3d;
-  transition: transform 1000ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 .coin-face {
   backface-visibility: hidden;
   position: absolute;
   inset: 0;
+  border-radius: 9999px;
 }
 .coin-face.back {
   transform: rotateX(180deg);
 }
-.coin-hop {
-  animation: hop 1000ms cubic-bezier(0.3, 0, 0.2, 1);
+.coin-glow .coin-face {
+  animation: glow 1100ms ease-out;
 }
-@keyframes hop {
-  0% { transform: translateY(0); }
-  35% { transform: translateY(-38px); }
-  100% { transform: translateY(0); }
+@keyframes glow {
+  0% { box-shadow: 0 0 0 0 rgba(210, 74, 50, 0); }
+  20% { box-shadow: 0 0 28px 10px rgba(210, 74, 50, 0.75); }
+  100% { box-shadow: 0 0 0 0 rgba(210, 74, 50, 0); }
 }
 
+/* 爻出现 */
 .line-enter {
   animation: rise 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
@@ -71,8 +72,33 @@ body {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.line-rare > :first-child {
+  animation: rare-glow 1200ms ease-out;
+}
+@keyframes rare-glow {
+  0% { filter: drop-shadow(0 0 0 rgba(210, 74, 50, 0)); }
+  25% { filter: drop-shadow(0 0 10px rgba(210, 74, 50, 1)); }
+  100% { filter: drop-shadow(0 0 0 rgba(210, 74, 50, 0)); }
+}
+
+/* 揭示：--d 控制每个元素的出场时刻 */
+.rv {
+  animation: reveal 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(8px); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.rv-flash {
+  animation: flash 650ms ease-in-out 2;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes flash {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(210, 74, 50, 0); }
+  50% { box-shadow: 0 0 14px 3px rgba(210, 74, 50, 0.85); }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .coin { transition-duration: 1ms; }
-  .coin-hop, .line-enter { animation: none; }
+  .line-enter, .rv, .rv-flash, .line-rare > :first-child, .coin-glow .coin-face { animation: none; }
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import { cast, tossLine, type CastResult, type CoinToss, type LineValue } from "@liuyao/core";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Coin } from "./Coin";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { buzz, chime, clink, ensureAudio, isMuted, land, rare, setMuted } from "@/lib/audio";
+import { CoinTray, type CoinTrayHandle } from "./CoinTray";
 import { HexagramChart } from "./HexagramChart";
 import { LineBar } from "./LineBar";
 
@@ -17,7 +18,7 @@ interface HistoryItem {
 
 const HISTORY_KEY = "liuyao:history";
 const VALUE_NAME: Record<LineValue, string> = { 6: "老阴", 7: "少阳", 8: "少阴", 9: "老阳" };
-const TOSS_MS = 1000;
+const ORDINAL = "一二三四五六";
 
 function loadHistory(): HistoryItem[] {
   try {
@@ -39,18 +40,15 @@ export function Divination() {
   const [stage, setStage] = useState<Stage>("ask");
   const [question, setQuestion] = useState("");
   const [values, setValues] = useState<LineValue[]>([]);
-  const [coins, setCoins] = useState<CoinToss>([false, false, false]);
-  const [spin, setSpin] = useState(0);
-  const [busy, setBusy] = useState(false);
   const [castAt, setCastAt] = useState<Date | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  const timer = useRef<number | null>(null);
+  const [muted, setMutedState] = useState(false);
 
+  // 服务端渲染没有 localStorage，挂载后再读，避免 hydration 不一致
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHistory(loadHistory());
-    return () => {
-      if (timer.current) window.clearTimeout(timer.current);
-    };
+    setMutedState(isMuted());
   }, []);
 
   const result: CastResult | null = useMemo(() => {
@@ -58,9 +56,11 @@ export function Divination() {
     return cast(values, castAt, { question: question.trim() || undefined });
   }, [values, castAt, question]);
 
+  // 第六爻落定后停一拍，再揭示
   useEffect(() => {
     if (stage !== "toss" || !result) return;
     const id = window.setTimeout(() => {
+      chime();
       setStage("result");
       const item: HistoryItem = {
         id: castAt!.getTime().toString(36),
@@ -73,27 +73,14 @@ export function Divination() {
         saveHistory(next);
         return next;
       });
-    }, 700);
+    }, 1100);
     return () => window.clearTimeout(id);
   }, [stage, result, castAt, question, values]);
 
   function begin() {
     setValues([]);
-    setSpin(0);
     setCastAt(new Date());
     setStage("toss");
-  }
-
-  function toss() {
-    if (busy || values.length >= 6) return;
-    const { coins: faces, value } = tossLine();
-    setBusy(true);
-    setCoins(faces);
-    setSpin((s) => s + 1);
-    timer.current = window.setTimeout(() => {
-      setValues((v) => [...v, value]);
-      setBusy(false);
-    }, TOSS_MS);
   }
 
   function reopen(item: HistoryItem) {
@@ -110,15 +97,27 @@ export function Divination() {
     setStage("ask");
   }
 
+  function toggleMute() {
+    const next = !muted;
+    setMuted(next);
+    setMutedState(next);
+    if (!next) ensureAudio();
+  }
+
   return (
     <div className="flex flex-1 flex-col gap-8">
       <header className="flex items-baseline justify-between">
         <h1 className="font-display text-xl font-bold tracking-[0.3em] text-brass">赛博六爻</h1>
-        {stage !== "ask" && (
-          <button onClick={reset} className="text-sm text-bone-dim hover:text-bone">
-            再问一卦
+        <div className="flex items-baseline gap-4 text-sm text-bone-dim">
+          <button onClick={toggleMute} aria-pressed={muted} className="hover:text-bone">
+            {muted ? "声音 关" : "声音 开"}
           </button>
-        )}
+          {stage !== "ask" && (
+            <button onClick={reset} className="hover:text-bone">
+              再问一卦
+            </button>
+          )}
+        </div>
       </header>
 
       {stage === "ask" && (
@@ -126,10 +125,10 @@ export function Divination() {
       )}
 
       {stage === "toss" && (
-        <TossStage question={question} values={values} coins={coins} spin={spin} busy={busy} onToss={toss} />
+        <TossStage question={question} values={values} onLine={(v) => setValues((prev) => [...prev, v])} />
       )}
 
-      {stage === "result" && result && <HexagramChart result={result} />}
+      {stage === "result" && result && <HexagramChart key={castAt?.getTime()} result={result} />}
     </div>
   );
 }
@@ -153,6 +152,7 @@ function AskStage({
         className="flex flex-col gap-6"
         onSubmit={(e) => {
           e.preventDefault();
+          ensureAudio();
           onBegin();
         }}
       >
@@ -204,55 +204,147 @@ function AskStage({
   );
 }
 
-function TossStage({
-  question,
-  values,
-  coins,
-  spin,
-  busy,
-  onToss,
-}: {
-  question: string;
-  values: LineValue[];
-  coins: CoinToss;
-  spin: number;
-  busy: boolean;
-  onToss: () => void;
-}) {
+type Phase = "idle" | "holding" | "flying" | "landed";
+
+function TossStage({ question, values, onLine }: { question: string; values: LineValue[]; onLine: (v: LineValue) => void }) {
+  const tray = useRef<CoinTrayHandle>(null);
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [last, setLast] = useState<{ coins: CoinToss; value: LineValue } | null>(null);
+
+  const holding = useRef(false);
+  const intensity = useRef(0);
+  const lastPointer = useRef({ x: 0, y: 0, t: 0 });
+  const lastClink = useRef(0);
+  const raf = useRef<number | null>(null);
+
   const done = values.length >= 6;
   const n = values.length + 1;
+
+  useEffect(() => () => {
+    if (raf.current) cancelAnimationFrame(raf.current);
+  }, []);
+
+  function loop() {
+    tray.current?.shake(intensity.current);
+    intensity.current *= 0.9;
+    raf.current = requestAnimationFrame(loop);
+  }
+
+  function onPointerDown(e: PointerEvent<HTMLDivElement>) {
+    if (phase === "flying" || done) return;
+    ensureAudio();
+    holding.current = true;
+    intensity.current = 0;
+    lastPointer.current = { x: e.clientX, y: e.clientY, t: performance.now() };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setPhase("holding");
+    if (!raf.current) raf.current = requestAnimationFrame(loop);
+  }
+
+  function onPointerMove(e: PointerEvent<HTMLDivElement>) {
+    if (!holding.current) return;
+    const now = performance.now();
+    const { x, y, t } = lastPointer.current;
+    const dt = Math.max(1, now - t);
+    const speed = Math.hypot(e.clientX - x, e.clientY - y) / dt; // px/ms
+    intensity.current = Math.min(1, intensity.current * 0.7 + speed * 0.45);
+    lastPointer.current = { x: e.clientX, y: e.clientY, t: now };
+    if (intensity.current > 0.3 && now - lastClink.current > 70) {
+      clink(intensity.current);
+      buzz(8);
+      lastClink.current = now;
+    }
+  }
+
+  function onPointerUp() {
+    if (!holding.current) return;
+    holding.current = false;
+    if (raf.current) {
+      cancelAnimationFrame(raf.current);
+      raf.current = null;
+    }
+    void throwCoins();
+  }
+
+  function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if ((e.key === "Enter" || e.key === " ") && phase !== "flying" && !done) {
+      e.preventDefault();
+      ensureAudio();
+      void throwCoins();
+    }
+  }
+
+  async function throwCoins() {
+    setPhase("flying");
+    setLast(null);
+    const toss = tossLine();
+    await tray.current?.throwCoins(toss.coins, (i) => {
+      land(i);
+      buzz(12);
+    });
+    const moving = toss.value === 6 || toss.value === 9;
+    if (moving) {
+      tray.current?.burst();
+      rare();
+      buzz([40, 50, 90]);
+    }
+    setLast(toss);
+    setPhase("landed");
+    onLine(toss.value);
+  }
+
+  const hint = (() => {
+    if (done) return "六爻已成";
+    if (phase === "holding") return "……";
+    if (phase === "flying") return "";
+    if (phase === "landed" && last) return `第${ORDINAL[n - 2]}爻已定，再摇第${ORDINAL[n - 1]}次`;
+    return `按住铜钱晃一晃，松手掷出 · 第${ORDINAL[n - 1]}次`;
+  })();
+
   return (
-    <div className="flex flex-1 flex-col items-center gap-10">
+    <div className="flex flex-1 flex-col items-center gap-8">
       {question.trim() && <p className="max-w-prose text-center text-sm text-bone-dim">{question}</p>}
 
-      <button
-        onClick={onToss}
-        disabled={busy || done}
-        aria-label={done ? "已摇满六爻" : `摇第${n}次`}
-        className="group flex flex-col items-center gap-6 rounded-xl px-6 py-4 disabled:cursor-default"
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={done ? "六爻已成" : `摇第${ORDINAL[n - 1]}次，按住晃动后松开`}
+        aria-disabled={done || phase === "flying"}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        onKeyDown={onKeyDown}
+        className={`flex select-none flex-col items-center gap-2 rounded-xl px-4 py-2 outline-none touch-none ${
+          done || phase === "flying" ? "cursor-default" : "cursor-grab active:cursor-grabbing"
+        }`}
       >
-        <div className="flex items-end gap-4 sm:gap-6">
-          {coins.map((back, i) => (
-            <Coin key={i} back={back} spin={spin} delay={i * 90} hopping={busy} />
-          ))}
+        <CoinTray ref={tray} />
+        <div className="flex h-12 flex-col items-center justify-center gap-1">
+          {last && phase === "landed" && (
+            <span className="line-enter font-mono text-sm tracking-widest text-brass">
+              {last.coins.map((b) => (b ? "背" : "字")).join(" · ")}
+              <span className="text-bone-dim"> → </span>
+              <span className={last.value === 6 || last.value === 9 ? "text-cinnabar" : ""}>{VALUE_NAME[last.value]}</span>
+            </span>
+          )}
+          <span className="text-sm text-bone-dim">{hint}</span>
         </div>
-        <span className="font-display text-lg text-brass transition group-enabled:group-hover:text-brass-pale">
-          {done ? "六爻已成" : busy ? "…" : `摇第${"一二三四五六"[n - 1]}次`}
-        </span>
-      </button>
+      </div>
 
       <ol className="flex flex-col-reverse gap-3" aria-label="已成之爻">
         {Array.from({ length: 6 }, (_, i) => {
           const v = values[i];
+          const moving = v === 6 || v === 9;
           return (
             <li key={i} className="flex h-6 items-center gap-4">
               <span className="w-8 text-right font-mono text-xs text-bone-dim">{"初二三四五上"[i]}</span>
               {v ? (
-                <span className="line-enter flex items-center gap-3">
-                  <LineBar yang={v === 7 || v === 9} moving={v === 6 || v === 9} />
+                <span className={`line-enter flex items-center gap-3 ${moving ? "line-rare" : ""}`}>
+                  <LineBar yang={v === 7 || v === 9} moving={moving} />
                   <span className="text-xs text-bone-dim">
                     {VALUE_NAME[v]}
-                    {(v === 6 || v === 9) && <span className="ml-1 text-cinnabar">{v === 9 ? "○" : "×"}</span>}
+                    {moving && <span className="ml-1 text-cinnabar">{v === 9 ? "○" : "×"}</span>}
                   </span>
                 </span>
               ) : (
