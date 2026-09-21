@@ -120,6 +120,25 @@ def segment_end(env, win, start_i, next_i, floor_db=-42, hold_ms=60, max_ms=1500
     return limit * win
 
 
+def hits(seg):
+    """切片内部的撞击时刻（ms）和相对强度，画面上的弹跳按这个来"""
+    env, win = envelope(seg)
+    peak = max(env)
+    th = peak * 0.07
+    back = 6  # 12ms
+    out = []
+    last = -10**9
+    for i in range(back, len(env)):
+        prev = max(env[i - back : i])
+        if env[i] > th and env[i] > 2.5 * prev and (i - last) * 2 >= 22:
+            a = max(env[i : i + 4]) / peak
+            out.append({"t": i * 2, "a": round(a, 2)})
+            last = i
+    if not out or out[0]["t"] > 15:
+        out.insert(0, {"t": 0, "a": 1.0})
+    return out
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     for f in os.listdir(OUT):
@@ -150,7 +169,10 @@ def main():
         for k, seg in enumerate(pieces):
             fn = f"{cat}-{name}-{k + 1:02d}.wav"
             write(os.path.join(OUT, fn), seg)
-            manifest[cat].append({"file": fn, "ms": round(len(seg) * 1000 / SR), "source": name})
+            item = {"file": fn, "ms": round(len(seg) * 1000 / SR), "source": name}
+            if cat != "shake":
+                item["hits"] = hits(seg)
+            manifest[cat].append(item)
         print(f"{name:28s} {cat:5s} {mode:6s} → {len(pieces)} 段")
     # 转 AAC 到 public/sounds/lib，清单里记 m4a 文件名
     os.makedirs(LIB, exist_ok=True)

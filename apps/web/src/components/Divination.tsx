@@ -3,7 +3,7 @@
 import { cast, tossLine, type CastResult, type CoinToss, type LineValue } from "@liuyao/core";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import { buzz, chime, ensureAudio, isMuted, land, rare, setMuted, settle, startShake, type ShakeHandle } from "@/lib/audio";
+import { buzz, chime, ensureAudio, isMuted, rare, setMuted, settle, startShake, type ShakeHandle } from "@/lib/audio";
 import { CoinTray, type CoinTrayHandle } from "./CoinTray";
 import { HexagramChart } from "./HexagramChart";
 import { LineBar } from "./LineBar";
@@ -244,6 +244,7 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
     lastPointer.current = { x: e.clientX, y: e.clientY, t: performance.now() };
     e.currentTarget.setPointerCapture(e.pointerId);
     setPhase("holding");
+    tray.current?.pickUp();
     shake.current = startShake();
     if (!raf.current) raf.current = requestAnimationFrame(loop);
   }
@@ -286,13 +287,15 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
     setPhase("flying");
     setLast(null);
     const toss = tossLine();
-    await tray.current?.throwCoins(toss.coins, (i) => {
-      land(i);
-      buzz(12);
-      // 最后一枚偶尔转着落定
-      if (i === 2 && Math.random() < 0.35) settle();
-    });
     const moving = toss.value === 6 || toss.value === 9;
+    await tray.current?.throwCoins(toss.coins, {
+      rate: moving ? 0.88 : undefined,
+      onLand: (i) => {
+        buzz(12);
+        // 最后一枚偶尔转着落定
+        if (i === 2 && Math.random() < 0.3) settle();
+      },
+    });
     if (moving) {
       tray.current?.burst();
       rare();

@@ -25,489 +25,1879 @@
   {
    "file": "land-oga-coin_drop-01.m4a",
    "ms": 146,
-   "source": "oga-coin_drop"
+   "source": "oga-coin_drop",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 96,
+     "a": 0.99
+    }
+   ]
   },
   {
    "file": "land-oga-coin_drop-02.m4a",
    "ms": 369,
-   "source": "oga-coin_drop"
+   "source": "oga-coin_drop",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-coin-drop-01.m4a",
    "ms": 116,
-   "source": "fs-coin-drop"
+   "source": "fs-coin-drop",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-coin-drop-02.m4a",
    "ms": 134,
-   "source": "fs-coin-drop"
+   "source": "fs-coin-drop",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-coin-drop-03.m4a",
    "ms": 465,
-   "source": "fs-coin-drop"
+   "source": "fs-coin-drop",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 90,
+     "a": 0.21
+    },
+    {
+     "t": 198,
+     "a": 0.27
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-01.m4a",
    "ms": 190,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 112,
+     "a": 0.92
+    },
+    {
+     "t": 188,
+     "a": 0.24
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-02.m4a",
    "ms": 196,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 58,
+     "a": 0.44
+    },
+    {
+     "t": 102,
+     "a": 0.91
+    },
+    {
+     "t": 126,
+     "a": 0.36
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-03.m4a",
    "ms": 124,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 18,
+     "a": 0.82
+    },
+    {
+     "t": 90,
+     "a": 0.27
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-04.m4a",
    "ms": 766,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 30,
+     "a": 0.36
+    },
+    {
+     "t": 56,
+     "a": 0.3
+    },
+    {
+     "t": 78,
+     "a": 0.23
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-05.m4a",
    "ms": 168,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 94,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-06.m4a",
    "ms": 1117,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 56,
+     "a": 0.12
+    },
+    {
+     "t": 356,
+     "a": 0.23
+    },
+    {
+     "t": 678,
+     "a": 0.15
+    },
+    {
+     "t": 1050,
+     "a": 0.15
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-07.m4a",
    "ms": 132,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 32,
+     "a": 0.21
+    },
+    {
+     "t": 92,
+     "a": 0.17
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-08.m4a",
    "ms": 283,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 36,
+     "a": 0.12
+    },
+    {
+     "t": 58,
+     "a": 1.0
+    },
+    {
+     "t": 208,
+     "a": 0.11
+    },
+    {
+     "t": 250,
+     "a": 0.07
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-09.m4a",
    "ms": 128,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 28,
+     "a": 0.82
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-10.m4a",
    "ms": 78,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-11.m4a",
    "ms": 1086,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 36,
+     "a": 0.35
+    },
+    {
+     "t": 92,
+     "a": 0.26
+    },
+    {
+     "t": 158,
+     "a": 0.22
+    },
+    {
+     "t": 408,
+     "a": 0.12
+    },
+    {
+     "t": 454,
+     "a": 0.15
+    },
+    {
+     "t": 496,
+     "a": 0.12
+    },
+    {
+     "t": 650,
+     "a": 0.09
+    },
+    {
+     "t": 730,
+     "a": 0.1
+    },
+    {
+     "t": 868,
+     "a": 0.09
+    },
+    {
+     "t": 964,
+     "a": 0.08
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-12.m4a",
    "ms": 716,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 54,
+     "a": 0.39
+    },
+    {
+     "t": 112,
+     "a": 0.39
+    },
+    {
+     "t": 138,
+     "a": 0.48
+    },
+    {
+     "t": 168,
+     "a": 0.43
+    },
+    {
+     "t": 208,
+     "a": 0.59
+    },
+    {
+     "t": 518,
+     "a": 0.17
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-13.m4a",
    "ms": 174,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 110,
+     "a": 0.38
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-14.m4a",
    "ms": 192,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 52,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-15.m4a",
    "ms": 200,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 50,
+     "a": 1.0
+    },
+    {
+     "t": 92,
+     "a": 0.52
+    },
+    {
+     "t": 118,
+     "a": 0.64
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-16.m4a",
    "ms": 124,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-17.m4a",
    "ms": 279,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 26,
+     "a": 0.91
+    },
+    {
+     "t": 58,
+     "a": 0.43
+    },
+    {
+     "t": 88,
+     "a": 0.52
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-18.m4a",
    "ms": 158,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 106,
+     "a": 0.9
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-19.m4a",
    "ms": 210,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 28,
+     "a": 0.82
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-20.m4a",
    "ms": 235,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 78,
+     "a": 0.12
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-21.m4a",
    "ms": 235,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 122,
+     "a": 1.0
+    },
+    {
+     "t": 156,
+     "a": 0.4
+    }
+   ]
   },
   {
    "file": "land-fs-coin-fall-on-table-22.m4a",
    "ms": 253,
-   "source": "fs-coin-fall-on-table"
+   "source": "fs-coin-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 58,
+     "a": 0.37
+    },
+    {
+     "t": 96,
+     "a": 0.39
+    },
+    {
+     "t": 118,
+     "a": 0.19
+    }
+   ]
   },
   {
    "file": "land-fs-flip-coin-wood-table-01.m4a",
    "ms": 337,
-   "source": "fs-flip-coin-wood-table"
+   "source": "fs-flip-coin-wood-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 120,
+     "a": 1.0
+    },
+    {
+     "t": 148,
+     "a": 0.63
+    }
+   ]
   },
   {
    "file": "land-fs-coins-fall-on-table-01.m4a",
    "ms": 467,
-   "source": "fs-coins-fall-on-table"
+   "source": "fs-coins-fall-on-table",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-01.m4a",
    "ms": 166,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 112,
+     "a": 0.35
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-02.m4a",
    "ms": 615,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 38,
+     "a": 0.33
+    },
+    {
+     "t": 76,
+     "a": 1.0
+    },
+    {
+     "t": 160,
+     "a": 0.24
+    },
+    {
+     "t": 304,
+     "a": 0.45
+    },
+    {
+     "t": 362,
+     "a": 0.24
+    },
+    {
+     "t": 416,
+     "a": 0.38
+    },
+    {
+     "t": 464,
+     "a": 0.49
+    },
+    {
+     "t": 554,
+     "a": 0.29
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-03.m4a",
    "ms": 1149,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 80,
+     "a": 0.33
+    },
+    {
+     "t": 110,
+     "a": 0.26
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-04.m4a",
    "ms": 150,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 94,
+     "a": 0.45
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-05.m4a",
    "ms": 668,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 50,
+     "a": 0.25
+    },
+    {
+     "t": 148,
+     "a": 0.33
+    },
+    {
+     "t": 484,
+     "a": 0.16
+    },
+    {
+     "t": 558,
+     "a": 0.16
+    },
+    {
+     "t": 588,
+     "a": 0.19
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-06.m4a",
    "ms": 776,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 86,
+     "a": 0.33
+    },
+    {
+     "t": 144,
+     "a": 0.09
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-07.m4a",
    "ms": 198,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 68,
+     "a": 0.1
+    },
+    {
+     "t": 122,
+     "a": 0.55
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-08.m4a",
    "ms": 160,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 58,
+     "a": 1.0
+    },
+    {
+     "t": 90,
+     "a": 0.26
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-09.m4a",
    "ms": 313,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-10.m4a",
    "ms": 886,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 20,
+     "a": 1.0
+    },
+    {
+     "t": 60,
+     "a": 0.32
+    },
+    {
+     "t": 92,
+     "a": 0.3
+    },
+    {
+     "t": 122,
+     "a": 0.36
+    },
+    {
+     "t": 846,
+     "a": 0.08
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-11.m4a",
    "ms": 686,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 104,
+     "a": 0.59
+    },
+    {
+     "t": 476,
+     "a": 0.09
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-12.m4a",
    "ms": 60,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-13.m4a",
    "ms": 84,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-14.m4a",
    "ms": 469,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 42,
+     "a": 0.14
+    },
+    {
+     "t": 108,
+     "a": 0.22
+    },
+    {
+     "t": 132,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-15.m4a",
    "ms": 180,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 150,
+     "a": 0.08
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-16.m4a",
    "ms": 138,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 46,
+     "a": 0.43
+    },
+    {
+     "t": 68,
+     "a": 0.58
+    },
+    {
+     "t": 108,
+     "a": 0.22
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-17.m4a",
    "ms": 140,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 138,
+     "a": 0.09
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-18.m4a",
    "ms": 186,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-19.m4a",
    "ms": 561,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 70,
+     "a": 0.23
+    },
+    {
+     "t": 174,
+     "a": 0.13
+    },
+    {
+     "t": 292,
+     "a": 0.1
+    },
+    {
+     "t": 500,
+     "a": 0.11
+    },
+    {
+     "t": 524,
+     "a": 0.17
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-20.m4a",
    "ms": 301,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 46,
+     "a": 0.58
+    },
+    {
+     "t": 86,
+     "a": 0.43
+    },
+    {
+     "t": 122,
+     "a": 0.16
+    },
+    {
+     "t": 148,
+     "a": 0.35
+    },
+    {
+     "t": 202,
+     "a": 0.13
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-21.m4a",
    "ms": 142,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-22.m4a",
    "ms": 174,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-23.m4a",
    "ms": 204,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 110,
+     "a": 0.19
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-24.m4a",
    "ms": 44,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-25.m4a",
    "ms": 1415,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 38,
+     "a": 1.0
+    },
+    {
+     "t": 158,
+     "a": 0.32
+    },
+    {
+     "t": 214,
+     "a": 0.13
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-26.m4a",
    "ms": 124,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 50,
+     "a": 0.37
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-27.m4a",
    "ms": 130,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 52,
+     "a": 0.19
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-28.m4a",
    "ms": 848,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 50,
+     "a": 1.0
+    },
+    {
+     "t": 502,
+     "a": 0.21
+    },
+    {
+     "t": 614,
+     "a": 0.22
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-29.m4a",
    "ms": 220,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 98,
+     "a": 0.55
+    },
+    {
+     "t": 142,
+     "a": 0.16
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-30.m4a",
    "ms": 223,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 68,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-31.m4a",
    "ms": 204,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 188,
+     "a": 0.12
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-32.m4a",
    "ms": 164,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-33.m4a",
    "ms": 1163,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 40,
+     "a": 0.15
+    },
+    {
+     "t": 114,
+     "a": 0.41
+    },
+    {
+     "t": 150,
+     "a": 0.17
+    },
+    {
+     "t": 428,
+     "a": 0.09
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-34.m4a",
    "ms": 106,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-35.m4a",
    "ms": 166,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 84,
+     "a": 0.17
+    },
+    {
+     "t": 144,
+     "a": 0.13
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-36.m4a",
    "ms": 449,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 62,
+     "a": 0.35
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-37.m4a",
    "ms": 483,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 354,
+     "a": 0.4
+    },
+    {
+     "t": 376,
+     "a": 0.98
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-38.m4a",
    "ms": 1177,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 38,
+     "a": 0.25
+    },
+    {
+     "t": 64,
+     "a": 0.18
+    },
+    {
+     "t": 90,
+     "a": 1.0
+    },
+    {
+     "t": 148,
+     "a": 0.1
+    },
+    {
+     "t": 172,
+     "a": 0.25
+    },
+    {
+     "t": 222,
+     "a": 0.54
+    },
+    {
+     "t": 312,
+     "a": 0.15
+    },
+    {
+     "t": 1034,
+     "a": 0.17
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-39.m4a",
    "ms": 144,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-40.m4a",
    "ms": 140,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 24,
+     "a": 0.67
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-41.m4a",
    "ms": 194,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 114,
+     "a": 0.21
+    },
+    {
+     "t": 182,
+     "a": 0.15
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-42.m4a",
    "ms": 988,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 238,
+     "a": 0.11
+    },
+    {
+     "t": 284,
+     "a": 0.15
+    },
+    {
+     "t": 320,
+     "a": 0.07
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-43.m4a",
    "ms": 176,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-44.m4a",
    "ms": 383,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 82,
+     "a": 0.42
+    },
+    {
+     "t": 134,
+     "a": 0.17
+    }
+   ]
   },
   {
    "file": "land-fs-couple-coins-wood-top-45.m4a",
    "ms": 443,
-   "source": "fs-couple-coins-wood-top"
+   "source": "fs-couple-coins-wood-top",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 58,
+     "a": 0.25
+    },
+    {
+     "t": 368,
+     "a": 0.1
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-01.m4a",
    "ms": 756,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 606,
+     "a": 0.08
+    },
+    {
+     "t": 686,
+     "a": 0.14
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-02.m4a",
    "ms": 1068,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 392,
+     "a": 0.57
+    },
+    {
+     "t": 632,
+     "a": 1.0
+    },
+    {
+     "t": 1022,
+     "a": 0.67
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-03.m4a",
    "ms": 1221,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-04.m4a",
    "ms": 794,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 392,
+     "a": 0.56
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-05.m4a",
    "ms": 1501,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 124,
+     "a": 0.23
+    },
+    {
+     "t": 668,
+     "a": 0.38
+    },
+    {
+     "t": 706,
+     "a": 0.62
+    },
+    {
+     "t": 798,
+     "a": 0.2
+    },
+    {
+     "t": 876,
+     "a": 0.13
+    },
+    {
+     "t": 1094,
+     "a": 0.35
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-06.m4a",
    "ms": 788,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 184,
+     "a": 0.31
+    },
+    {
+     "t": 470,
+     "a": 0.22
+    },
+    {
+     "t": 534,
+     "a": 0.08
+    },
+    {
+     "t": 718,
+     "a": 0.19
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-07.m4a",
    "ms": 842,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-08.m4a",
    "ms": 1293,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 112,
+     "a": 0.48
+    },
+    {
+     "t": 834,
+     "a": 0.2
+    },
+    {
+     "t": 1088,
+     "a": 0.59
+    },
+    {
+     "t": 1252,
+     "a": 0.5
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-09.m4a",
    "ms": 1086,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 112,
+     "a": 0.49
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-10.m4a",
    "ms": 413,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 168,
+     "a": 0.69
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-11.m4a",
    "ms": 641,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 36,
+     "a": 0.49
+    },
+    {
+     "t": 106,
+     "a": 0.51
+    },
+    {
+     "t": 274,
+     "a": 0.13
+    },
+    {
+     "t": 438,
+     "a": 0.12
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-12.m4a",
    "ms": 451,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 38,
+     "a": 0.38
+    },
+    {
+     "t": 96,
+     "a": 0.15
+    },
+    {
+     "t": 274,
+     "a": 0.13
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-13.m4a",
    "ms": 210,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 54,
+     "a": 0.65
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-14.m4a",
    "ms": 164,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 50,
+     "a": 0.23
+    },
+    {
+     "t": 106,
+     "a": 0.49
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-15.m4a",
    "ms": 481,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 278,
+     "a": 0.32
+    },
+    {
+     "t": 396,
+     "a": 0.2
+    },
+    {
+     "t": 468,
+     "a": 0.14
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-16.m4a",
    "ms": 445,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 38,
+     "a": 0.37
+    },
+    {
+     "t": 258,
+     "a": 0.09
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-17.m4a",
    "ms": 435,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-18.m4a",
    "ms": 303,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 82,
+     "a": 1.0
+    },
+    {
+     "t": 208,
+     "a": 0.16
+    },
+    {
+     "t": 236,
+     "a": 0.2
+    },
+    {
+     "t": 282,
+     "a": 0.21
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-19.m4a",
    "ms": 1501,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 608,
+     "a": 0.27
+    },
+    {
+     "t": 866,
+     "a": 0.18
+    },
+    {
+     "t": 1034,
+     "a": 0.1
+    },
+    {
+     "t": 1212,
+     "a": 0.15
+    },
+    {
+     "t": 1252,
+     "a": 0.32
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-20.m4a",
    "ms": 190,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 164,
+     "a": 0.14
+    }
+   ]
   },
   {
    "file": "land-oga-coinsounds011015-21.m4a",
    "ms": 1501,
-   "source": "oga-coinsounds011015"
+   "source": "oga-coinsounds011015",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 162,
+     "a": 0.09
+    }
+   ]
   }
  ],
  "spin": [
   {
    "file": "spin-bsb-2697-spin-01.m4a",
    "ms": 1100,
-   "source": "bsb-2697-spin"
+   "source": "bsb-2697-spin",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    }
+   ]
   },
   {
    "file": "spin-fs-spinning-coin-drop-01.m4a",
    "ms": 2027,
-   "source": "fs-spinning-coin-drop"
+   "source": "fs-spinning-coin-drop",
+   "hits": [
+    {
+     "t": 0,
+     "a": 1.0
+    },
+    {
+     "t": 34,
+     "a": 0.9
+    },
+    {
+     "t": 142,
+     "a": 0.47
+    },
+    {
+     "t": 170,
+     "a": 0.56
+    },
+    {
+     "t": 372,
+     "a": 0.1
+    },
+    {
+     "t": 784,
+     "a": 0.13
+    },
+    {
+     "t": 840,
+     "a": 0.16
+    },
+    {
+     "t": 1798,
+     "a": 0.1
+    }
+   ]
   }
  ]
 }

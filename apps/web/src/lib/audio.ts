@@ -16,6 +16,8 @@ export interface Sample {
   file: string;
   ms: number;
   source: string;
+  /** 切片内的撞击时刻（ms）与相对强度，落桌/转停类才有 */
+  hits?: { t: number; a: number }[];
 }
 export type Manifest = Record<Category, Sample[]>;
 
@@ -365,7 +367,28 @@ export function clink(intensity = 0.6) {
   if (c) synthClink(c, c.currentTime, intensity);
 }
 
-/** 铜钱落定 */
+export interface Hit {
+  t: number;
+  a: number;
+}
+
+/**
+ * 预约一次落桌：delaySec 后播放随机挑的落桌录音，返回录音里的撞击时刻（按播放速率换算），
+ * 画面用它来安排弹跳。没有采样时返回 null。
+ */
+export function scheduleLand(delaySec: number, opts: { rate?: number; gain?: number } = {}): { hits: Hit[]; ms: number } | null {
+  const c = live();
+  if (!c || !manifest) return null;
+  const s = pick("land");
+  if (!s) return null;
+  const rate = opts.rate ?? 1;
+  playSample(c, s.buffer, c.currentTime + delaySec, opts.gain ?? 0.9, rate);
+  const meta = manifest.land.find((m) => m.file === s.file);
+  const hits = (meta?.hits ?? [{ t: 0, a: 1 }]).map((h) => ({ t: h.t / rate, a: h.a }));
+  return { hits, ms: (meta?.ms ?? 300) / rate };
+}
+
+/** 铜钱落定（没有预约时的即时版本） */
 export function land(index: number) {
   const c = live();
   if (!c) return;
@@ -382,15 +405,11 @@ export function settle() {
   if (s) playSample(c, s.buffer, c.currentTime, 0.8, rand(0.95, 1.05));
 }
 
-/** 老阳 / 老阴：更重的一落 */
+/** 老阳 / 老阴：落桌录音已经在放（放慢了），这里只补一记桌面的闷响 */
 export function rare() {
   const c = live();
   if (!c) return;
-  const at = c.currentTime + 0.02;
-  thump(c, at, 0.45, 120, 45, 0.09);
-  const s = pick("land");
-  if (s) playSample(c, s.buffer, at, 1, 0.88);
-  else synthLand(c, at, 0);
+  thump(c, c.currentTime + 0.02, 0.45, 120, 45, 0.09);
 }
 
 /** 卦成，轻磬一声 */
