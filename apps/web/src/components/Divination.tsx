@@ -6,7 +6,6 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerE
 import { buzz, chime, ensureAudio, isMuted, rare, setMuted, settle, startShake, type ShakeHandle } from "@/lib/audio";
 import { CoinTray, type CoinTrayHandle } from "./CoinTray";
 import { HexagramChart } from "./HexagramChart";
-import { LineBar } from "./LineBar";
 
 type Stage = "ask" | "toss" | "result";
 
@@ -107,7 +106,7 @@ export function Divination() {
 
   return (
     <div className="flex flex-1 flex-col gap-8">
-      <header className="flex items-baseline justify-between">
+      <header className="relative z-10 flex items-baseline justify-between">
         <h1 className="font-display text-xl font-bold tracking-[0.3em] text-brass">赛博六爻</h1>
         <div className="flex items-baseline gap-4 text-sm text-bone-dim">
           <button onClick={toggleMute} aria-pressed={muted} className="hover:text-bone">
@@ -315,9 +314,8 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
   })();
 
   return (
-    <div className="flex flex-1 flex-col items-center gap-8">
-      {question.trim() && <p className="max-w-prose text-center text-sm text-bone-dim">{question}</p>}
-
+    <>
+      {/* 沉浸式：整块屏幕就是桌面，按住任何地方都能晃 */}
       <div
         role="button"
         tabIndex={0}
@@ -328,45 +326,42 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         onKeyDown={onKeyDown}
-        className={`flex select-none flex-col items-center gap-2 rounded-xl px-4 py-2 outline-none touch-none ${
+        className={`fixed inset-0 z-0 select-none outline-none touch-none ${
           done || phase === "flying" ? "cursor-default" : "cursor-grab active:cursor-grabbing"
         }`}
       >
-        <CoinTray ref={tray} />
-        <div className="flex h-12 flex-col items-center justify-center gap-1">
-          {last && phase === "landed" && (
+        <CoinTray ref={tray} fill />
+      </div>
+
+      {/* 底部只留一行字和六个点 */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 flex flex-col items-center gap-3 px-6 pb-10 pt-16 bg-gradient-to-t from-ink/90 to-transparent">
+        {question.trim() && <p className="max-w-prose text-center text-xs text-bone-dim/80">{question}</p>}
+        <div className="flex h-7 items-center">
+          {last && phase === "landed" ? (
             <span className="line-enter font-mono text-sm tracking-widest text-brass">
               {last.coins.map((b) => (b ? "背" : "字")).join(" · ")}
               <span className="text-bone-dim"> → </span>
               <span className={last.value === 6 || last.value === 9 ? "text-cinnabar" : ""}>{VALUE_NAME[last.value]}</span>
             </span>
+          ) : (
+            <span className="text-sm text-bone-dim">{hint}</span>
           )}
-          <span className="text-sm text-bone-dim">{hint}</span>
         </div>
+        <ol className="flex items-center gap-2.5" aria-label="已成之爻">
+          {Array.from({ length: 6 }, (_, i) => {
+            const v = values[i];
+            const moving = v === 6 || v === 9;
+            return (
+              <li
+                key={i}
+                className={`h-1.5 w-1.5 rounded-full transition ${
+                  v ? (moving ? "bg-cinnabar shadow-[0_0_6px_rgba(210,74,50,0.9)]" : "bg-brass") : "bg-bone-dim/30"
+                }`}
+              />
+            );
+          })}
+        </ol>
       </div>
-
-      <ol className="flex flex-col-reverse gap-3" aria-label="已成之爻">
-        {Array.from({ length: 6 }, (_, i) => {
-          const v = values[i];
-          const moving = v === 6 || v === 9;
-          return (
-            <li key={i} className="flex h-6 items-center gap-4">
-              <span className="w-8 text-right font-mono text-xs text-bone-dim">{"初二三四五上"[i]}</span>
-              {v ? (
-                <span className={`line-enter flex items-center gap-3 ${moving ? "line-rare" : ""}`}>
-                  <LineBar yang={v === 7 || v === 9} moving={moving} />
-                  <span className="text-xs text-bone-dim">
-                    {VALUE_NAME[v]}
-                    {moving && <span className="ml-1 text-cinnabar">{v === 9 ? "○" : "×"}</span>}
-                  </span>
-                </span>
-              ) : (
-                <span className="h-px w-20 bg-ink-3" />
-              )}
-            </li>
-          );
-        })}
-      </ol>
-    </div>
+    </>
   );
 }

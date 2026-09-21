@@ -47,22 +47,39 @@ body {
 }
 .table-plane {
   position: absolute;
-  left: 0;
+  left: 50%;
   bottom: 0;
   transform-origin: 50% 100%;
-  transform: rotateX(56deg);
+  transform: translateX(-50%) rotateX(56deg);
   transform-style: preserve-3d;
+}
+.table-scene-fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.table-scene-fill .table-plane {
+  bottom: 9%;
 }
 .table-top {
   position: absolute;
-  inset: 0;
-  border-radius: 6px;
+  /* 桌面向远处和两侧延伸出画，只有近边在屏幕里 */
+  inset: -900px -400px 0 -400px;
+  border-radius: 0 0 4px 4px;
   background:
     radial-gradient(ellipse 70% 60% at 50% 40%, rgba(255, 220, 160, 0.10), transparent 70%),
     repeating-linear-gradient(97deg, rgba(0, 0, 0, 0.10) 0 2px, transparent 2px 9px, rgba(0, 0, 0, 0.06) 9px 11px, transparent 11px 23px),
     repeating-linear-gradient(94deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 5px),
     linear-gradient(180deg, #3a2a1c, #2c1f14 60%, #241a11);
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.55), 0 30px 40px -20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 6px 0 #1a1109, 0 30px 40px -12px rgba(0, 0, 0, 0.9);
+}
+/* 远处没入黑暗：贴在桌面上、越远越黑的雾 */
+.table-fog {
+  position: absolute;
+  inset: -900px -400px 0 -400px;
+  background: linear-gradient(180deg, #0f1516 0%, #0f1516 35%, rgba(15, 21, 22, 0.75) 55%, rgba(15, 21, 22, 0.25) 75%, transparent 100%);
+  transform: translateZ(0.3px);
+  pointer-events: none;
 }
 .table-ring {
   position: absolute;

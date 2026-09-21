@@ -19,7 +19,7 @@ export interface CoinTrayHandle {
 /** 桌面平面尺寸（平面坐标，未透视） */
 const TABLE_W = 340;
 const TABLE_H = 250;
-const COIN = 72;
+const COIN = 62;
 const HAND: Pose[] = [
   { x: -30, y: 62, z: 34, rx: 0, ry: 0, rz: -20, tilt: 0, axis: 0 },
   { x: 4, y: 54, z: 40, rx: 0, ry: 0, rz: 15, tilt: 0, axis: 0 },
@@ -58,7 +58,9 @@ type Mode =
   | { kind: "hand"; intensity: number; jitter: Pose[] }
   | { kind: "toss"; plans: TossPlan[]; start: number; landed: boolean[]; onLand?: (i: number) => void; resolve: () => void };
 
-export const CoinTray = forwardRef<CoinTrayHandle, { className?: string }>(function CoinTray({ className = "" }, ref) {
+export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: boolean }>(function CoinTray({ className = "", fill = false }, ref) {
+  const scene = useRef<HTMLDivElement>(null);
+  const plane = useRef<HTMLDivElement>(null);
   const coins = useRef<(HTMLDivElement | null)[]>([]);
   const shadows = useRef<(HTMLDivElement | null)[]>([]);
   const ring = useRef<HTMLDivElement>(null);
@@ -113,6 +115,7 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string }>(funct
       if (allDone) {
         pose.current = m.plans.map((p) => ({ ...p.final }));
         mode.current = { kind: "rest" };
+        m.resolve(); // 录音很短时会先于上面的判定结束，这里兜底
       }
     }
     render();
@@ -129,6 +132,22 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string }>(funct
       if (raf.current) cancelAnimationFrame(raf.current);
     };
   }, []);
+
+  // fill 模式：桌面比容器还宽一些，边缘出画，像坐在桌前
+  useEffect(() => {
+    if (!fill || !scene.current) return;
+    const el = scene.current;
+    const apply = () => {
+      const w = el.clientWidth;
+      const k = Math.min((w * 1.25) / TABLE_W, 2.1);
+      if (plane.current) plane.current.style.transform = `translateX(-50%) rotateX(56deg) scale(${k})`;
+      el.style.perspective = `${820 * k}px`;
+    };
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [fill]);
 
   useImperativeHandle(ref, () => ({
     pickUp() {
@@ -194,9 +213,14 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string }>(funct
   }));
 
   return (
-    <div className={`table-scene ${className}`} style={{ width: TABLE_W, height: TABLE_H * 0.62 + 90 }}>
-      <div className="table-plane" style={{ width: TABLE_W, height: TABLE_H }}>
+    <div
+      ref={scene}
+      className={`table-scene ${fill ? "table-scene-fill" : ""} ${className}`}
+      style={fill ? undefined : { width: TABLE_W, height: TABLE_H * 0.62 + 90 }}
+    >
+      <div ref={plane} className="table-plane" style={{ width: TABLE_W, height: TABLE_H }}>
         <div className="table-top" />
+        <div className="table-fog" aria-hidden />
         <div ref={ring} aria-hidden className="table-ring" />
         {REST.map((_, i) => (
           <div
