@@ -3,7 +3,7 @@
 import { cast, tossLine, type CastResult, type CoinToss, type LineValue } from "@liuyao/core";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import { buzz, chime, clink, ensureAudio, isMuted, land, rare, setMuted } from "@/lib/audio";
+import { buzz, chime, ensureAudio, isMuted, land, rare, setMuted, settle, startShake, type ShakeHandle } from "@/lib/audio";
 import { CoinTray, type CoinTrayHandle } from "./CoinTray";
 import { HexagramChart } from "./HexagramChart";
 import { LineBar } from "./LineBar";
@@ -114,7 +114,7 @@ export function Divination() {
             {muted ? "声音 关" : "声音 开"}
           </button>
           <Link href="/sound" className="hover:text-bone">
-            音色
+            采样
           </Link>
           {stage !== "ask" && (
             <button onClick={reset} className="hover:text-bone">
@@ -218,7 +218,8 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
   const holding = useRef(false);
   const intensity = useRef(0);
   const lastPointer = useRef({ x: 0, y: 0, t: 0 });
-  const lastClink = useRef(0);
+  const lastBuzz = useRef(0);
+  const shake = useRef<ShakeHandle | null>(null);
   const raf = useRef<number | null>(null);
 
   const done = values.length >= 6;
@@ -230,6 +231,7 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
 
   function loop() {
     tray.current?.shake(intensity.current);
+    shake.current?.setIntensity(intensity.current);
     intensity.current *= 0.9;
     raf.current = requestAnimationFrame(loop);
   }
@@ -242,6 +244,7 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
     lastPointer.current = { x: e.clientX, y: e.clientY, t: performance.now() };
     e.currentTarget.setPointerCapture(e.pointerId);
     setPhase("holding");
+    shake.current = startShake();
     if (!raf.current) raf.current = requestAnimationFrame(loop);
   }
 
@@ -253,16 +256,17 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
     const speed = Math.hypot(e.clientX - x, e.clientY - y) / dt; // px/ms
     intensity.current = Math.min(1, intensity.current * 0.7 + speed * 0.45);
     lastPointer.current = { x: e.clientX, y: e.clientY, t: now };
-    if (intensity.current > 0.3 && now - lastClink.current > 70) {
-      clink(intensity.current);
+    if (intensity.current > 0.3 && now - lastBuzz.current > 70) {
       buzz(8);
-      lastClink.current = now;
+      lastBuzz.current = now;
     }
   }
 
   function onPointerUp() {
     if (!holding.current) return;
     holding.current = false;
+    shake.current?.stop();
+    shake.current = null;
     if (raf.current) {
       cancelAnimationFrame(raf.current);
       raf.current = null;
@@ -285,6 +289,8 @@ function TossStage({ question, values, onLine }: { question: string; values: Lin
     await tray.current?.throwCoins(toss.coins, (i) => {
       land(i);
       buzz(12);
+      // 最后一枚偶尔转着落定
+      if (i === 2 && Math.random() < 0.35) settle();
     });
     const moving = toss.value === 6 || toss.value === 9;
     if (moving) {
