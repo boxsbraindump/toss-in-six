@@ -1,6 +1,7 @@
 import type { CastResult, ChartLine } from "@liuyao/core";
 import { castTimeText, formatChart, summarize } from "@liuyao/core";
 import { LineBar } from "./LineBar";
+import { ReadingPrompt } from "./ReadingPrompt";
 
 const POS = ["初", "二", "三", "四", "五", "上"];
 
@@ -47,6 +48,8 @@ export function HexagramChart({ result }: { result: CastResult }) {
           ))}
         </ul>
       )}
+
+      <ReadingPrompt result={result} />
 
       <details className="group text-sm">
         <summary className="cursor-pointer text-bone-dim hover:text-bone">文字卦盘</summary>
