@@ -34,8 +34,6 @@ export interface SoundProfile {
   };
   /** 空腔共鸣（龟壳） */
   body?: { freq: number; q: number; mix: number };
-  /** 撞击时附一个电子短音（赛博） */
-  blip?: boolean;
 }
 
 export const PROFILES: readonly SoundProfile[] = [
@@ -79,15 +77,6 @@ export const PROFILES: readonly SoundProfile[] = [
     lowpass: 9000,
     clink: { center: [2200, 5000], decay: [0.01, 0.025], ring: [0.3, 0.5], ringDecay: [0.05, 0.1], gain: 1.1 },
     land: { center: [1500, 2600], q: 0.7, ring: 0.7, ringDecay: 0.18, thump: 0.4, thumpFrom: 120, bounces: [2, 3], wobble: 0.5, wobbleCenter: [1800, 3200] },
-  },
-  {
-    id: "cyber",
-    label: "赛博",
-    note: "故意不写实：撞击附一个电子短音",
-    lowpass: 12000,
-    clink: { center: [3000, 7000], decay: [0.005, 0.012], ring: [0.2, 0.4], ringDecay: [0.03, 0.06], gain: 0.9 },
-    land: { center: [2400, 3400], q: 0.7, ring: 0.5, ringDecay: 0.1, thump: 0.18, thumpFrom: 170, bounces: [2, 4], wobble: 0.6, wobbleCenter: [2600, 4800] },
-    blip: true,
   },
 ];
 
@@ -285,21 +274,6 @@ function thump(c: BaseAudioContext, p: SoundProfile, at: number, gain: number, f
   osc.stop(at + dur + 0.05);
 }
 
-/** 赛博方案的电子短音：方波急速下滑 */
-function blip(c: BaseAudioContext, p: SoundProfile, at: number, gain: number, from: number, to: number, dur: number) {
-  const osc = c.createOscillator();
-  osc.type = "square";
-  osc.frequency.setValueAtTime(from, at);
-  osc.frequency.exponentialRampToValueAtTime(to, at + dur);
-  const g = c.createGain();
-  g.gain.setValueAtTime(0, at);
-  g.gain.linearRampToValueAtTime(gain, at + 0.002);
-  g.gain.exponentialRampToValueAtTime(0.0005, at + dur + 0.03);
-  osc.connect(g).connect(chain(c, p));
-  osc.start(at);
-  osc.stop(at + dur + 0.05);
-}
-
 // ---------- 各种事件 ----------
 
 /** 手里晃铜钱：几枚硬币互相磕碰，干、脆、短 */
@@ -315,7 +289,6 @@ export function coinClink(c: BaseAudioContext, at: number, intensity: number, p:
       ring: pick(p.clink.ring),
       ringDecay: pick(p.clink.ringDecay),
     });
-    if (p.blip && k === 0) blip(c, p, t, 0.02 * intensity, rand(2800, 4000), 1200, 0.02);
   }
 }
 
@@ -325,7 +298,6 @@ export function coinLand(c: BaseAudioContext, at: number, index: number, p: Soun
   let t = at;
   thump(c, p, t, L.thump, L.thumpFrom - index * 15, 70, 0.045);
   tick(c, p, t, { gain: 0.42, center: pick(L.center), q: L.q, decay: 0.03, ring: L.ring, ringDecay: L.ringDecay });
-  if (p.blip) blip(c, p, t, 0.07, 2400, 500, 0.045);
 
   // 弹跳：间隔按 0.6 递减，音量随之变小
   let dt = rand(0.075, 0.115);
@@ -335,7 +307,6 @@ export function coinLand(c: BaseAudioContext, at: number, index: number, p: Soun
     t += dt;
     thump(c, p, t, g * 0.5 * (L.thump / 0.22), 150, 70, 0.035);
     tick(c, p, t, { gain: g, center: pick(L.center) * 1.2, q: L.q + 0.2, decay: 0.016, ring: L.ring * 0.8, ringDecay: L.ringDecay * 0.6 });
-    if (p.blip) blip(c, p, t, g * 0.2, 2000, 600, 0.03);
     dt *= rand(0.55, 0.68);
     g *= 0.62;
   }
@@ -358,7 +329,6 @@ export function coinHeavy(c: BaseAudioContext, at: number, p: SoundProfile = get
   thump(c, p, at, Math.max(0.3, p.land.thump * 1.6), 120, 45, 0.09);
   tick(c, p, at, { gain: 0.3, center: pick(p.land.center) * 0.7, q: 0.6, decay: 0.05, ring: 0.9, ringDecay: p.land.ringDecay * 3 });
   tick(c, p, at + 0.012, { gain: 0.2, center: pick(p.land.center), q: 0.8, decay: 0.03, ring: 0.6, ringDecay: p.land.ringDecay * 2.5 });
-  if (p.blip) blip(c, p, at, 0.09, 900, 120, 0.12);
 }
 
 /** 卦成，轻磬一声：磬是另一件器物，允许有音高，但放轻 */
