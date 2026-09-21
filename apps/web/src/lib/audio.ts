@@ -1,6 +1,9 @@
 /**
  * 铜钱声音全部用 WebAudio 现场合成，不依赖音频文件。
- * 金属声 = 几个不成整数比的正弦分音 + 快速指数衰减 + 一点噪声。
+ *
+ * 硬币的声音几乎没有音高：主体是几毫秒的宽频"嗒"（带通噪声），
+ * 加上很短的金属高频余振。落在桌上则是：撞击 → 几次间隔渐短的弹跳 → 越转越快的落定"哗啦"。
+ * 这里把每一次接触都建模成一次 tick，再按物理过程排布时间。
  */
 
 const MUTE_KEY = "liuyao:muted";
@@ -46,84 +49,213 @@ export function ensureAudio(): AudioContext | null {
   return ctx;
 }
 
-function partial(c: AudioContext, freq: number, gain: number, decay: number, at: number, type: OscillatorType = "sine") {
-  const osc = c.createOscillator();
-  const g = c.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, at);
-  g.gain.setValueAtTime(0, at);
-  g.gain.linearRampToValueAtTime(gain, at + 0.004);
-  g.gain.exponentialRampToValueAtTime(0.0005, at + decay);
-  osc.connect(g).connect(c.destination);
-  osc.start(at);
-  osc.stop(at + decay + 0.05);
+// ---------- 底层：输出链、噪声源、单次敲击 ----------
+
+const masters = new WeakMap<BaseAudioContext, GainNode>();
+const noises = new WeakMap<BaseAudioContext, AudioBuffer>();
+
+function master(c: BaseAudioContext): GainNode {
+  let m = masters.get(c);
+  if (m) return m;
+  const comp = c.createDynamicsCompressor();
+  comp.threshold.value = -16;
+  comp.ratio.value = 4;
+  comp.attack.value = 0.001;
+  comp.release.value = 0.06;
+  const lp = c.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = 11000;
+  m = c.createGain();
+  m.gain.value = 0.9;
+  m.connect(comp).connect(lp).connect(c.destination);
+  masters.set(c, m);
+  return m;
 }
 
-function noise(c: AudioContext, gain: number, decay: number, at: number, hp = 3000) {
-  const len = Math.ceil(c.sampleRate * decay);
-  const buf = c.createBuffer(1, len, c.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 3;
+function noiseBuffer(c: BaseAudioContext): AudioBuffer {
+  let b = noises.get(c);
+  if (b) return b;
+  b = c.createBuffer(1, c.sampleRate, c.sampleRate);
+  const d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  noises.set(c, b);
+  return b;
+}
+
+function rand(a: number, b: number): number {
+  return a + Math.random() * (b - a);
+}
+
+interface Tick {
+  /** 峰值音量 */
+  gain: number;
+  /** 噪声带通中心频率 */
+  center: number;
+  q?: number;
+  /** 噪声衰减时间（秒） */
+  decay: number;
+  /** 金属余振相对音量，0 = 无 */
+  ring?: number;
+  ringDecay?: number;
+}
+
+/** 一次接触：带通噪声瞬态 + 几个不成比例的高频余振 */
+function tick(c: BaseAudioContext, at: number, t: Tick) {
+  const out = master(c);
+
   const src = c.createBufferSource();
-  src.buffer = buf;
-  const f = c.createBiquadFilter();
-  f.type = "highpass";
-  f.frequency.value = hp;
+  src.buffer = noiseBuffer(c);
+  src.loop = true;
+  src.loopStart = 0;
+  src.loopEnd = 1;
+  const bp = c.createBiquadFilter();
+  bp.type = "bandpass";
+  bp.frequency.value = t.center;
+  bp.Q.value = t.q ?? 1.1;
   const g = c.createGain();
-  g.gain.value = gain;
-  src.connect(f).connect(g).connect(c.destination);
-  src.start(at);
+  g.gain.setValueAtTime(0, at);
+  g.gain.linearRampToValueAtTime(t.gain, at + 0.0012);
+  g.gain.exponentialRampToValueAtTime(0.0008, at + t.decay);
+  src.connect(bp).connect(g).connect(out);
+  src.start(at, Math.random() * 0.9);
+  src.stop(at + t.decay + 0.02);
+
+  const ring = t.ring ?? 0;
+  if (ring > 0) {
+    const base = t.center * rand(1.15, 1.45);
+    const ratios = [1, 1.47, 1.92];
+    const gains = [1, 0.45, 0.22];
+    const rd = t.ringDecay ?? 0.05;
+    ratios.forEach((r, i) => {
+      const osc = c.createOscillator();
+      osc.type = "sine";
+      osc.frequency.value = Math.min(base * r, 11000);
+      const rg = c.createGain();
+      rg.gain.setValueAtTime(0, at);
+      rg.gain.linearRampToValueAtTime(t.gain * ring * gains[i]!, at + 0.002);
+      rg.gain.exponentialRampToValueAtTime(0.0005, at + rd * (1 - i * 0.2));
+      osc.connect(rg).connect(out);
+      osc.start(at);
+      osc.stop(at + rd + 0.02);
+    });
+  }
 }
 
-/** 手里晃铜钱的碰撞声，intensity 0..1 */
+/** 桌面的闷响：很低、很短 */
+function thump(c: BaseAudioContext, at: number, gain: number, from = 150, to = 70, dur = 0.05) {
+  const osc = c.createOscillator();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(from, at);
+  osc.frequency.exponentialRampToValueAtTime(to, at + dur);
+  const g = c.createGain();
+  g.gain.setValueAtTime(0, at);
+  g.gain.linearRampToValueAtTime(gain, at + 0.003);
+  g.gain.exponentialRampToValueAtTime(0.0008, at + dur + 0.03);
+  osc.connect(g).connect(master(c));
+  osc.start(at);
+  osc.stop(at + dur + 0.05);
+}
+
+// ---------- 各种事件 ----------
+
+/** 手里晃铜钱：几枚硬币互相磕碰，干、脆、短 */
+export function coinClink(c: BaseAudioContext, at: number, intensity: number) {
+  const n = 1 + (Math.random() < intensity ? 1 : 0) + (Math.random() < intensity * 0.5 ? 1 : 0);
+  for (let k = 0; k < n; k++) {
+    tick(c, at + k * rand(0.004, 0.022), {
+      gain: (0.06 + 0.16 * intensity) * rand(0.5, 1),
+      center: rand(3200, 7500),
+      q: rand(0.8, 1.6),
+      decay: rand(0.006, 0.018),
+      ring: rand(0.15, 0.4),
+      ringDecay: rand(0.025, 0.06),
+    });
+  }
+}
+
+/** 铜钱落到桌上：撞击 → 弹跳 → 转着落定 */
+export function coinLand(c: BaseAudioContext, at: number, index: number) {
+  let t = at;
+  thump(c, t, 0.22, 170 - index * 15, 70, 0.045);
+  tick(c, t, { gain: 0.42, center: rand(2400, 3400), q: 0.7, decay: 0.03, ring: 0.5, ringDecay: 0.1 });
+
+  // 弹跳：间隔按 0.6 递减，音量随之变小
+  let dt = rand(0.075, 0.115);
+  let g = 0.24;
+  const bounces = 2 + Math.floor(Math.random() * 3);
+  for (let b = 0; b < bounces; b++) {
+    t += dt;
+    thump(c, t, g * 0.5, 150, 70, 0.035);
+    tick(c, t, { gain: g, center: rand(2800, 4200), q: 0.9, decay: 0.016, ring: 0.4, ringDecay: 0.06 });
+    dt *= rand(0.55, 0.68);
+    g *= 0.62;
+  }
+
+  // 落定：转着越来越快的"哗啦"，六成的落地有这一段
+  if (Math.random() < 0.6) {
+    let iv = rand(0.032, 0.048);
+    g = 0.11;
+    for (let k = 0; k < 26 && iv > 0.0045; k++) {
+      t += iv;
+      tick(c, t, { gain: g * rand(0.7, 1), center: rand(2600, 4800), q: 1.2, decay: 0.007, ring: 0.2, ringDecay: 0.025 });
+      iv *= rand(0.86, 0.9);
+      g *= 0.94;
+    }
+  }
+}
+
+/** 老阳 / 老阴：更重的一落，桌面闷响更深、金属余音更长 */
+export function coinHeavy(c: BaseAudioContext, at: number) {
+  thump(c, at, 0.5, 120, 45, 0.09);
+  tick(c, at, { gain: 0.3, center: 1900, q: 0.6, decay: 0.05, ring: 0.9, ringDecay: 0.35 });
+  tick(c, at + 0.012, { gain: 0.2, center: 2700, q: 0.8, decay: 0.03, ring: 0.6, ringDecay: 0.28 });
+}
+
+/** 卦成，轻磬一声：磬是另一件器物，允许有音高，但放轻 */
+export function bowlChime(c: BaseAudioContext, at: number) {
+  const out = master(c);
+  const f0 = 528;
+  [1, 2.76, 5.4].forEach((r, i) => {
+    const osc = c.createOscillator();
+    osc.frequency.value = f0 * r;
+    const g = c.createGain();
+    const peak = [0.1, 0.045, 0.018][i]!;
+    const dec = [1.8, 1.1, 0.6][i]!;
+    g.gain.setValueAtTime(0, at);
+    g.gain.linearRampToValueAtTime(peak, at + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0005, at + dec);
+    osc.connect(g).connect(out);
+    osc.start(at);
+    osc.stop(at + dec + 0.05);
+  });
+  tick(c, at, { gain: 0.05, center: 3000, q: 0.5, decay: 0.01 });
+}
+
+// ---------- 对外接口（带静音判断） ----------
+
+function live(): AudioContext | null {
+  if (isMuted()) return null;
+  return ensureAudio();
+}
+
 export function clink(intensity = 0.6) {
-  if (isMuted()) return;
-  const c = ensureAudio();
-  if (!c) return;
-  const t = c.currentTime;
-  const base = 2600 + Math.random() * 900;
-  const v = 0.03 + intensity * 0.08;
-  partial(c, base, v, 0.05 + Math.random() * 0.04, t);
-  partial(c, base * 1.62, v * 0.5, 0.04, t);
-  noise(c, v * 0.6, 0.03, t, 4000);
+  const c = live();
+  if (c) coinClink(c, c.currentTime, intensity);
 }
 
-/** 铜钱落定 */
 export function land(index: number) {
-  if (isMuted()) return;
-  const c = ensureAudio();
-  if (!c) return;
-  const t = c.currentTime;
-  const base = 1750 + index * 90 + Math.random() * 120;
-  partial(c, base, 0.16, 0.32, t);
-  partial(c, base * 1.48, 0.09, 0.22, t);
-  partial(c, base * 2.31, 0.05, 0.14, t);
-  noise(c, 0.08, 0.04, t, 2500);
-  // 第二次小弹跳
-  partial(c, base * 1.02, 0.06, 0.16, t + 0.13);
+  const c = live();
+  if (c) coinLand(c, c.currentTime, index);
 }
 
-/** 老阳 / 老阴：低沉的一记 */
 export function rare() {
-  if (isMuted()) return;
-  const c = ensureAudio();
-  if (!c) return;
-  const t = c.currentTime + 0.02;
-  partial(c, 110, 0.5, 0.9, t, "triangle");
-  partial(c, 165, 0.25, 0.7, t);
-  partial(c, 1320, 0.12, 0.5, t);
-  partial(c, 2640, 0.05, 0.9, t + 0.05);
+  const c = live();
+  if (c) coinHeavy(c, c.currentTime + 0.02);
 }
 
-/** 卦成，轻磬一声 */
 export function chime() {
-  if (isMuted()) return;
-  const c = ensureAudio();
-  if (!c) return;
-  const t = c.currentTime + 0.05;
-  partial(c, 660, 0.12, 1.4, t);
-  partial(c, 1320, 0.06, 1.1, t);
-  partial(c, 1980, 0.03, 0.8, t);
+  const c = live();
+  if (c) bowlChime(c, c.currentTime + 0.05);
 }
 
 export function buzz(pattern: number | number[]) {
@@ -132,4 +264,15 @@ export function buzz(pattern: number | number[]) {
   } catch {
     /* ignore */
   }
+}
+
+/** 离线渲染某个声音，用来在没有喇叭的环境里检查波形 */
+export async function renderPreview(name: "clink" | "land" | "rare" | "chime", seconds = 1.2): Promise<AudioBuffer> {
+  const c = new OfflineAudioContext(1, Math.ceil(44100 * seconds), 44100);
+  const at = 0.02;
+  if (name === "clink") coinClink(c, at, 0.8);
+  if (name === "land") coinLand(c, at, 1);
+  if (name === "rare") coinHeavy(c, at);
+  if (name === "chime") bowlChime(c, at);
+  return c.startRendering();
 }
