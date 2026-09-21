@@ -1,6 +1,6 @@
-import type { CastResult, ChartLine, ChangedLine, LineBasics } from './cast.js';
-import { castTimeText } from './calendar.js';
-import { ganZhiText } from './ganzhi.js';
+import type { CastResult, ChartLine, ChangedLine, LineBasics } from './cast';
+import { castTimeText } from './calendar';
+import { ganZhiText } from './ganzhi';
 
 const YANG = '▅▅▅▅▅';
 const YIN = '▅▅ ▅▅';

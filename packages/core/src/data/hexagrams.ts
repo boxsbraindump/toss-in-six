@@ -1,5 +1,5 @@
-import type { Element } from '../ganzhi.js';
-import { TRIGRAM_BY_NAME, trigramFromLines, trigramKey, type Trigram, type TrigramName } from './trigrams.js';
+import type { Element } from '../ganzhi';
+import { TRIGRAM_BY_NAME, trigramFromLines, trigramKey, type Trigram, type TrigramName } from './trigrams';
 
 export type HexagramKind = '本宫' | '一世' | '二世' | '三世' | '四世' | '五世' | '游魂' | '归魂';
 

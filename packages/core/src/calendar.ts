@@ -1,5 +1,5 @@
 import { Solar } from 'lunar-typescript';
-import { ganZhiText, parseGanZhi, xunKong, type Branch, type GanZhi } from './ganzhi.js';
+import { ganZhiText, parseGanZhi, xunKong, type Branch, type GanZhi } from './ganzhi';
 
 /** 起卦时刻的干支信息 */
 export interface CastTime {

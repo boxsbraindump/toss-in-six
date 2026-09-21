@@ -1,4 +1,4 @@
-import { cast, formatChart, summarize, tossHexagram } from '../src/index.js';
+import { cast, formatChart, summarize, tossHexagram } from '../src/index';
 
 const question = process.argv[2] ?? '测试：近期财运如何？';
 const values = tossHexagram();

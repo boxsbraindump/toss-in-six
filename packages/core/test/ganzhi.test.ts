@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clashes, combines, influence, parseGanZhi, relationOf, sexagenaryIndex, xunKong } from '../src/ganzhi.js';
+import { clashes, combines, influence, parseGanZhi, relationOf, sexagenaryIndex, xunKong } from '../src/ganzhi';
 
 describe('六亲', () => {
   it('以金为我', () => {

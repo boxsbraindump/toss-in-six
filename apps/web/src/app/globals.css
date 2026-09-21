@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/*
+ * 色板来自铜钱本身：包浆的青铜底、黄铜面、朱砂点动爻、骨白写字。
+ */
+@theme {
+  --color-ink: #0f1516;
+  --color-ink-2: #161f20;
+  --color-ink-3: #1f2a2b;
+  --color-bone: #e8e1d1;
+  --color-bone-dim: #8f8a7e;
+  --color-brass: #c9a86a;
+  --color-brass-deep: #8c6f3a;
+  --color-brass-pale: #e6d3a3;
+  --color-verdigris: #5f8f84;
+  --color-cinnabar: #d24a32;
+
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+html {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(95, 143, 132, 0.18), transparent 70%),
+    var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brass);
+  outline-offset: 3px;
+}
+
+/* 铜钱翻转 */
+.coin-scene {
+  perspective: 700px;
+}
+.coin {
+  transform-style: preserve-3d;
+  transition: transform 1000ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+.coin-face {
+  backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+.coin-face.back {
+  transform: rotateX(180deg);
+}
+.coin-hop {
+  animation: hop 1000ms cubic-bezier(0.3, 0, 0.2, 1);
+}
+@keyframes hop {
+  0% { transform: translateY(0); }
+  35% { transform: translateY(-38px); }
+  100% { transform: translateY(0); }
+}
+
+.line-enter {
+  animation: rise 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coin { transition-duration: 1ms; }
+  .coin-hop, .line-enter { animation: none; }
+}

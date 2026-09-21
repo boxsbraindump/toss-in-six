@@ -1,14 +1,10 @@
 {
   "name": "liuyao",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*", "apps/*"],
   "scripts": {
+    "dev": "npm run dev -w web",
     "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present"
-  },
-  "allowScripts": {
-    "esbuild@0.28.2": true
   }
 }

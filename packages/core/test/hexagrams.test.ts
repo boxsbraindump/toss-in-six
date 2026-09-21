@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HEXAGRAMS, hexagramFromLines, pureHexagramOf } from '../src/data/hexagrams.js';
+import { HEXAGRAMS, hexagramFromLines, pureHexagramOf } from '../src/data/hexagrams';
 
 describe('六十四卦表', () => {
   it('共 64 卦，周易序号 1..64 各出现一次', () => {

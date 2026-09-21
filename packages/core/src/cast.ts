@@ -1,5 +1,5 @@
-import type { CastTime } from './calendar.js';
-import { castTimeFromDate } from './calendar.js';
+import type { CastTime } from './calendar';
+import { castTimeFromDate } from './calendar';
 import {
   BRANCH_ELEMENT,
   clashes,
@@ -12,9 +12,9 @@ import {
   type Influence,
   type Relation,
   type Stem,
-} from './ganzhi.js';
-import { hexagramFromLines, pureHexagramOf, type HexagramInfo } from './data/hexagrams.js';
-import { assertSixValues, isMoving, isYang, type LineValue } from './toss.js';
+} from './ganzhi';
+import { hexagramFromLines, pureHexagramOf, type HexagramInfo } from './data/hexagrams';
+import { assertSixValues, isMoving, isYang, type LineValue } from './toss';
 
 export const SIX_BEASTS = ['青龙', '朱雀', '勾陈', '螣蛇', '白虎', '玄武'] as const;
 export type SixBeast = (typeof SIX_BEASTS)[number];

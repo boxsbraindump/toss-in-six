@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { castTimeOf } from '../src/calendar.js';
-import { ganZhiText } from '../src/ganzhi.js';
+import { castTimeOf } from '../src/calendar';
+import { ganZhiText } from '../src/ganzhi';
 
 describe('干支历', () => {
   it('2000-01-01 日柱戊午', () => {

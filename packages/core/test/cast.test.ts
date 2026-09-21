@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { castTimeFromPillars } from '../src/calendar.js';
-import { cast } from '../src/cast.js';
-import { formatChart, summarize } from '../src/format.js';
+import { castTimeFromPillars } from '../src/calendar';
+import { cast } from '../src/cast';
+import { formatChart, summarize } from '../src/format';
 
 const jiaZiDay = castTimeFromPillars({ year: '甲辰', month: '丙寅', day: '甲子' });
 

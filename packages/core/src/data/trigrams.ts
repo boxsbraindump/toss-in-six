@@ -1,5 +1,5 @@
-import type { Element, GanZhi } from '../ganzhi.js';
-import { parseGanZhi } from '../ganzhi.js';
+import type { Element, GanZhi } from '../ganzhi';
+import { parseGanZhi } from '../ganzhi';
 
 export type TrigramName = '乾' | '兑' | '离' | '震' | '巽' | '坎' | '艮' | '坤';
 
