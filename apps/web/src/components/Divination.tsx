@@ -122,33 +122,28 @@ export function Divination() {
 
   return (
     <div className="flex flex-1 flex-col gap-8">
-      <header className="relative z-10 flex items-baseline justify-between">
+      {/* 摇卦时头部退到后面，别和仪式抢 */}
+      <header className={`relative z-10 flex items-baseline justify-between transition-opacity ${stage === "toss" ? "opacity-40 hover:opacity-100" : ""}`}>
         <h1 className="flex items-baseline gap-3">
           <span className="font-display text-xl font-bold tracking-[0.3em] text-brass">摇六爻</span>
-          <span className="font-mono text-[11px] tracking-[0.2em] text-bone-dim">TOSS IN SIX</span>
+          <span className="hidden font-mono text-[11px] tracking-[0.2em] text-bone-dim sm:inline">TOSS IN SIX</span>
         </h1>
-        <div className="flex items-baseline gap-4 text-sm text-bone-dim">
-          <button onClick={toggleMute} aria-pressed={muted} className="hover:text-bone">
-            {muted ? "声音 关" : "声音 开"}
+        {stage !== "ask" && (
+          <button onClick={reset} className="text-sm text-bone-dim hover:text-bone">
+            再问一卦
           </button>
-          <Link href="/sound" className="hover:text-bone">
-            采样
-          </Link>
-          {stage === "toss" && (
-            <button onClick={toggleWood} className="hover:text-bone">
-              木纹 {wood === "worn" ? "老桌" : "深纹"}
-            </button>
-          )}
-          {stage !== "ask" && (
-            <button onClick={reset} className="hover:text-bone">
-              再问一卦
-            </button>
-          )}
-        </div>
+        )}
       </header>
 
       {stage === "ask" && (
-        <AskStage question={question} setQuestion={setQuestion} onBegin={begin} history={history} onReopen={reopen} />
+        <AskStage
+          question={question}
+          setQuestion={setQuestion}
+          onBegin={begin}
+          history={history}
+          onReopen={reopen}
+          settings={{ muted, toggleMute, wood, toggleWood }}
+        />
       )}
 
       {stage === "toss" && (
@@ -160,18 +155,25 @@ export function Divination() {
   );
 }
 
+function whenText(iso: string): string {
+  const d = new Date(iso);
+  return `${d.getMonth() + 1}月${d.getDate()}日 ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
 function AskStage({
   question,
   setQuestion,
   onBegin,
   history,
   onReopen,
+  settings,
 }: {
   question: string;
   setQuestion: (q: string) => void;
   onBegin: () => void;
   history: HistoryItem[];
   onReopen: (item: HistoryItem) => void;
+  settings: { muted: boolean; toggleMute: () => void; wood: Wood; toggleWood: () => void };
 }) {
   return (
     <div className="flex flex-col gap-10">
@@ -210,16 +212,16 @@ function AskStage({
         <section className="flex flex-col gap-3">
           <h3 className="text-xs tracking-[0.2em] text-bone-dim">之前的卦</h3>
           <ul className="flex flex-col divide-y divide-ink-3 border-y border-ink-3">
-            {history.slice(0, 8).map((item) => {
+            {history.slice(0, 5).map((item) => {
               const r = cast(item.values, new Date(item.at));
               return (
                 <li key={item.id}>
                   <button onClick={() => onReopen(item)} className="flex w-full items-baseline justify-between gap-4 py-3 text-left hover:text-brass">
-                    <span className="truncate text-sm">{item.question || <span className="text-bone-dim">（未写问题）</span>}</span>
                     <span className="shrink-0 font-display text-sm">
                       {r.original.info.name}
                       {r.changed && <span className="text-bone-dim"> 之 {r.changed.info.name}</span>}
                     </span>
+                    <span className="truncate text-sm text-bone-dim">{item.question || whenText(item.at)}</span>
                   </button>
                 </li>
               );
@@ -227,6 +229,18 @@ function AskStage({
           </ul>
         </section>
       )}
+
+      <footer className="flex flex-wrap items-baseline gap-x-4 gap-y-1 pt-6 text-xs text-bone-dim">
+        <button onClick={settings.toggleMute} aria-pressed={settings.muted} className="hover:text-bone">
+          声音 {settings.muted ? "关" : "开"}
+        </button>
+        <button onClick={settings.toggleWood} className="hover:text-bone">
+          桌面 {settings.wood === "worn" ? "老桌" : "深纹"}
+        </button>
+        <Link href="/sound" className="hover:text-bone">
+          采样库
+        </Link>
+      </footer>
     </div>
   );
 }
@@ -333,8 +347,8 @@ function TossStage({ question, values, wood, onLine }: { question: string; value
     if (done) return "六爻已成";
     if (phase === "holding") return "……";
     if (phase === "flying") return "";
-    if (phase === "landed" && last) return `第${ORDINAL[n - 2]}爻已定，再摇第${ORDINAL[n - 1]}次`;
-    return `按住铜钱晃一晃，松手掷出 · 第${ORDINAL[n - 1]}次`;
+    if (phase === "landed" && last) return `第${ORDINAL[n - 1]}次`;
+    return values.length === 0 ? "按住铜钱晃一晃，松手掷出" : `第${ORDINAL[n - 1]}次`;
   })();
 
   return (

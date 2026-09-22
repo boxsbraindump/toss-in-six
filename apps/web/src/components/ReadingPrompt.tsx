@@ -47,7 +47,7 @@ export function ReadingPrompt({ result }: { result: CastResult }) {
       <div className="flex flex-col gap-1">
         <h3 className="font-display text-lg font-bold">解卦</h3>
         <p className="text-sm text-bone-dim">
-          把卦盘和断卦方法一起复制出去，贴给 Claude 或任何大模型，让它按纳甲六爻的路数来断。
+          复制卦盘和断卦方法，贴给 Claude 让它来断。
         </p>
       </div>
 

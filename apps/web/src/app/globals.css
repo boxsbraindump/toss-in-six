@@ -4,9 +4,9 @@
  * 色板来自铜钱本身：包浆的青铜底、黄铜面、朱砂点动爻、骨白写字。
  */
 @theme {
-  --color-ink: #0f1516;
-  --color-ink-2: #161f20;
-  --color-ink-3: #1f2a2b;
+  --color-ink: #14100c;
+  --color-ink-2: #1c1711;
+  --color-ink-3: #2a231b;
   --color-bone: #e8e1d1;
   --color-bone-dim: #8f8a7e;
   --color-brass: #c9a86a;
@@ -30,7 +30,7 @@ html {
 body {
   min-height: 100dvh;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(95, 143, 132, 0.18), transparent 70%),
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201, 168, 106, 0.10), transparent 70%),
     var(--color-ink);
 }
 
@@ -81,7 +81,7 @@ body {
 .table-fog {
   position: absolute;
   inset: -900px -400px 0 -400px;
-  background: linear-gradient(180deg, #0f1516 0%, #0f1516 35%, rgba(15, 21, 22, 0.75) 55%, rgba(15, 21, 22, 0.25) 75%, transparent 100%);
+  background: linear-gradient(180deg, #14100c 0%, #14100c 30%, rgba(20, 16, 12, 0.8) 50%, rgba(20, 16, 12, 0.3) 74%, transparent 100%);
   transform: translateZ(0.3px);
   pointer-events: none;
 }

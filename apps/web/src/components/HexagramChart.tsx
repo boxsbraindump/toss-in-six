@@ -64,7 +64,7 @@ export function HexagramChart({ result }: { result: CastResult }) {
           {allStill && " · 六爻安静"}
           {allMoving && <span className="text-cinnabar"> · 六爻全动，四千零九十六卦里才有一卦</span>}
         </p>
-        <p className="rv font-mono text-xs leading-relaxed text-verdigris" style={delay(titleEnd + 200)}>
+        <p className="rv font-display text-xs leading-relaxed tracking-wider text-verdigris" style={delay(titleEnd + 200)}>
           {castTimeText(time)}
           <br />
           旬空 {time.xunKong.join("")}
@@ -84,7 +84,7 @@ export function HexagramChart({ result }: { result: CastResult }) {
             {result.fuShen.map((f) => (
               <li key={f.position}>
                 伏神 <span className="text-bone">{f.relation} {f.stem}{f.branch}{f.element}</span> 伏于{POS[f.position - 1]}爻 {f.flying.relation}{f.flying.branch} 之下
-                {f.tags.length > 0 && <span className="ml-2 font-mono text-xs text-verdigris">{f.tags.join(" ")}</span>}
+                {f.tags.length > 0 && <span className="ml-2 font-display text-[11px] text-verdigris">{f.tags.join(" ")}</span>}
               </li>
             ))}
           </ul>
@@ -103,15 +103,15 @@ export function HexagramChart({ result }: { result: CastResult }) {
 
 function Row({ line, changedName, flashAt }: { line: ChartLine; changedName?: string; flashAt: number }) {
   return (
-    <li className="grid min-h-10 grid-cols-[2.5rem_1fr] items-center gap-x-3 sm:grid-cols-[2.5rem_1fr_auto]">
+    <li className="grid min-h-10 grid-cols-[2.5rem_1fr] items-center gap-x-3 gap-y-0.5">
       <span className="text-xs text-bone-dim">{line.beast}</span>
       <div className="flex items-center gap-3">
-        <span className="flex w-24 shrink-0 flex-col text-sm leading-tight">
+        <span className="flex min-w-24 shrink-0 items-baseline gap-2 text-sm leading-tight">
           <span>
             <span className="text-bone-dim">{line.relation}</span> {line.stem}{line.branch}
             <span className="text-bone-dim">{line.element}</span>
           </span>
-          <span className="font-mono text-[10px] text-verdigris">{line.tags.join(" ") || " "}</span>
+          {line.tags.length > 0 && <span className="font-display text-[11px] text-verdigris">{line.tags.join(" ")}</span>}
         </span>
         <span className={line.moving ? "rv-flash rounded-sm" : ""} style={line.moving ? delay(flashAt) : undefined}>
           <LineBar yang={line.yang} moving={line.moving} />
@@ -124,7 +124,7 @@ function Row({ line, changedName, flashAt }: { line: ChartLine; changedName?: st
       </div>
       {line.change && (
         <span
-          className="rv col-start-2 flex items-center gap-2 text-sm text-bone-dim sm:col-start-3 sm:justify-end"
+          className="rv col-start-2 flex items-center gap-2 pl-0.5 text-sm text-bone-dim"
           style={delay(flashAt + 500)}
           title={`变卦 ${changedName ?? ""}`}
         >
