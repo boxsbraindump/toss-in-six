@@ -128,15 +128,17 @@ def cut(img, cx, cy, r):
     inv = lim.point(lambda p: 255 - p)
     bb = inv.getbbox()
     hole = Image.new("L", (SIZE, SIZE), 255)
+    hole_center = (SIZE / 2, SIZE / 2)
     if bb:
         ImageDraw.Draw(hole).rounded_rectangle((bb[0] + 1, bb[1] + 1, bb[2] - 1, bb[3] - 1), radius=3, fill=0)
+        hole_center = ((bb[0] + bb[2]) / 2, (bb[1] + bb[3]) / 2)
     hole = hole.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.GaussianBlur(0.7))
     alpha = Image.composite(alpha, Image.new("L", (SIZE, SIZE), 0), hole)
 
     face = grade(face)
 
     face.putalpha(alpha)
-    return face
+    return face, hole_center
 
 
 def grade(face):
@@ -198,11 +200,15 @@ def main():
         for side, box in zip(("obverse", "reverse"), halves):
             cx, cy, r = find_circle(gray, box)
             ox, oy, k = OVERRIDES.get(f"{tag}-{side}", (0, 0, 1))
-            cx, cy, r = cx + ox * r, cy + oy * r, r * k
-            face = cut(img, cx * 4, cy * 4, r * 4)
+            cx, cy, r = cx * 4 + ox * r * 4, cy * 4 + oy * r * 4, r * 4 * k
+            # 铜钱是铸的，方孔才是真正的中心：按方孔位置把圆心修正过去，再裁一次
+            face, (hx, hy) = cut(img, cx, cy, r)
+            px_per = 2 * r / SIZE
+            dx, dy = (hx - SIZE / 2) * px_per, (hy - SIZE / 2) * px_per
+            face, (hx2, hy2) = cut(img, cx + dx, cy + dy, r * 0.985)
             out = os.path.join(OUT, f"{tag}-{side}.webp")
             face.save(out, "WEBP", quality=86, method=6)
-            print(f"{name} {side}: 圆心 ({cx*4:.0f},{cy*4:.0f}) 半径 {r*4:.0f} → {out} {os.path.getsize(out)//1024}KB")
+            print(f"{name} {side}: 方孔偏离圆心 ({dx:+.0f},{dy:+.0f})px 已修正，复核偏差 ({hx2-SIZE/2:+.1f},{hy2-SIZE/2:+.1f}) → {os.path.basename(out)}")
 
 
 if __name__ == "__main__":
