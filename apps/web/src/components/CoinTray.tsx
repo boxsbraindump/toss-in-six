@@ -68,6 +68,7 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: 
   const plane = useRef<HTMLDivElement>(null);
   const coins = useRef<(HTMLDivElement | null)[]>([]);
   const shadows = useRef<(HTMLDivElement | null)[]>([]);
+  const contacts = useRef<(HTMLDivElement | null)[]>([]);
   const ring = useRef<HTMLDivElement>(null);
   const pose = useRef<Pose[]>(REST.map((p) => ({ ...p })));
   const mode = useRef<Mode>({ kind: "rest" });
@@ -81,7 +82,12 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: 
       if (sh) {
         const k = 1.15 + p.z / 90;
         sh.style.transform = `translate3d(${p.x + 4 + p.z * 0.15}px, ${p.y + 6 + p.z * 0.12}px, 0.5px) rotateZ(${p.rz}deg) scale(${k})`;
-        sh.style.opacity = String(0.7 / (1 + p.z / 40));
+        sh.style.opacity = String(0.6 / (1 + p.z / 40));
+      }
+      const ct = contacts.current[i];
+      if (ct) {
+        ct.style.transform = `translate3d(${p.x + 1}px, ${p.y + 2}px, 0.6px) scale(1.04)`;
+        ct.style.opacity = String(0.85 / (1 + p.z / 5));
       }
     });
   }
@@ -228,6 +234,16 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: 
         <div className="table-top" />
         <div className="table-fog" aria-hidden />
         <div ref={ring} aria-hidden className="table-ring" />
+        {REST.map((_, i) => (
+          <div
+            key={`ct${i}`}
+            ref={(el) => {
+              contacts.current[i] = el;
+            }}
+            className="coin-contact"
+            style={{ width: COIN, height: COIN, marginLeft: -COIN / 2, marginTop: -COIN / 2 }}
+          />
+        ))}
         {REST.map((_, i) => (
           <div
             key={`s${i}`}

@@ -133,15 +133,55 @@ def cut(img, cx, cy, r):
     hole = hole.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.GaussianBlur(0.7))
     alpha = Image.composite(alpha, Image.new("L", (SIZE, SIZE), 0), hole)
 
-    # 轻微调色：暖一点、对比稍强，让钱不那么发灰
-    face = ImageOps.autocontrast(face, cutoff=0.5)
-    r_, g_, b_ = face.split()
-    r_ = r_.point(lambda p: min(255, int(p * 1.06)))
-    b_ = b_.point(lambda p: int(p * 0.94))
-    face = Image.merge("RGB", (r_, g_, b_))
+    face = grade(face)
 
     face.putalpha(alpha)
     return face
+
+
+def grade(face):
+    """
+    出土钱表面钙化发白，和暖色桌面不搭。先用 gamma 把整体亮度压下去，再把亮度映射到
+    传世包浆的色谱（深褐底、浮雕高点金褐），原色只留两成；浮雕锐化；边缘一圈渐暗显得圆润。
+    """
+    lum = ImageOps.autocontrast(ImageOps.grayscale(face), cutoff=1)
+    lum = lum.point(lambda p: int(255 * (p / 255) ** 1.7))
+    lum = lum.filter(ImageFilter.UnsharpMask(radius=3, percent=110, threshold=2))
+    stops = [(0, (28, 18, 9)), (70, (72, 48, 24)), (150, (128, 92, 48)), (215, (180, 140, 82)), (255, (214, 180, 118))]
+
+    def channel(i):
+        lut = []
+        for v in range(256):
+            for (a, ca), (b, cb) in zip(stops, stops[1:]):
+                if a <= v <= b:
+                    t = (v - a) / (b - a)
+                    lut.append(int(ca[i] + (cb[i] - ca[i]) * t))
+                    break
+        return lum.point(lut)
+
+    bronze = Image.merge("RGB", (channel(0), channel(1), channel(2)))
+    orig = ImageOps.autocontrast(face, cutoff=1).point(lambda p: int(p * 0.75))
+    out = Image.blend(orig, bronze, 0.8)
+
+    # 边缘渐暗（圆润感）
+    big = SIZE * 2
+    rim = Image.new("L", (big, big), 255)
+    d = ImageDraw.Draw(rim)
+    for k in range(40):
+        t = k / 40
+        r = big / 2 * (0.86 + 0.14 * t)
+        d.ellipse((big / 2 - r, big / 2 - r, big / 2 + r, big / 2 + r), outline=int(255 * (1 - 0.55 * t)), width=int(big * 0.14 / 40) + 2)
+    rim = rim.resize((SIZE, SIZE), Image.LANCZOS).filter(ImageFilter.GaussianBlur(3))
+    dark = Image.new("RGB", (SIZE, SIZE), (0, 0, 0))
+    out = Image.composite(out, dark, rim)
+
+    # 很轻的左上高光，和桌面光一致
+    hl = Image.new("L", (SIZE, SIZE), 0)
+    ImageDraw.Draw(hl).ellipse((SIZE * 0.08, SIZE * 0.04, SIZE * 0.6, SIZE * 0.5), fill=255)
+    hl = hl.filter(ImageFilter.GaussianBlur(SIZE * 0.14)).point(lambda p: int(p * 0.14))
+    light = Image.new("RGB", (SIZE, SIZE), (255, 226, 170))
+    out = Image.composite(light, out, hl)
+    return out
 
 
 def main():
