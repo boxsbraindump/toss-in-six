@@ -152,6 +152,17 @@ body {
   100% { box-shadow: 0 0 0 0 rgba(210, 74, 50, 0); }
 }
 
+/* 落定后中央浮出的爻名：淡入、停、淡出 */
+.yao-pop {
+  animation: yao-pop 1700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes yao-pop {
+  0% { opacity: 0; transform: translateY(10px) scale(0.96); filter: blur(6px); }
+  14% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  62% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-14px) scale(1.02); filter: blur(4px); }
+}
+
 /* 爻出现 */
 .line-enter {
   animation: rise 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -189,5 +200,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .line-enter, .rv, .rv-flash, .line-rare > :first-child, .coin-glow .coin-face { animation: none; }
+  .yao-pop { animation: yao-fade 1700ms linear both; }
+  @keyframes yao-fade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
   .table-plane { transition: none; }
 }

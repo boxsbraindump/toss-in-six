@@ -357,6 +357,25 @@ function TossStage({ question, values, wood, onLine }: { question: string; value
         <CoinTray ref={tray} fill wood={wood} />
       </div>
 
+      {/* 落定后桌面中央浮出这一爻，停一下再淡出 */}
+      {last && phase === "landed" && (
+        <div key={values.length} className="yao-pop pointer-events-none fixed inset-0 z-10 flex flex-col items-center justify-center gap-4 pb-[28vh]" aria-hidden>
+          <span className={`font-display text-6xl font-bold tracking-[0.4em] pl-[0.4em] drop-shadow-[0_2px_18px_rgba(0,0,0,0.9)] ${
+            last.value === 6 || last.value === 9 ? "text-cinnabar" : "text-brass-pale"
+          }`}>
+            {VALUE_NAME[last.value]}
+          </span>
+          <span className={`flex h-2.5 w-24 gap-[18%] ${last.value === 6 || last.value === 9 ? "[&>span]:bg-cinnabar" : "[&>span]:bg-brass"}`}>
+            {last.value === 7 || last.value === 9 ? <span className="flex-1 rounded-[1px]" /> : (
+              <>
+                <span className="flex-1 rounded-[1px]" />
+                <span className="flex-1 rounded-[1px]" />
+              </>
+            )}
+          </span>
+        </div>
+      )}
+
       {/* 底部只留一行字和六个点 */}
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 flex flex-col items-center gap-3 px-6 pb-10 pt-16 bg-gradient-to-t from-ink/90 to-transparent">
         {question.trim() && <p className="max-w-prose text-center text-xs text-bone-dim/80">{question}</p>}
