@@ -238,7 +238,7 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: 
             style={{ width: COIN, height: COIN, marginLeft: -COIN / 2, marginTop: -COIN / 2 }}
           />
         ))}
-        {REST.map((_, i) => (
+        {["a", "b", "c"].map((tag, i) => (
           <div
             key={`c${i}`}
             ref={(el) => {
@@ -247,61 +247,15 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: 
             className="coin"
             style={{ width: COIN, height: COIN, marginLeft: -COIN / 2, marginTop: -COIN / 2 }}
           >
-            <div className="coin-edge" style={{ transform: "translateZ(-1.2px)" }} />
-            <div className="coin-edge" style={{ transform: "translateZ(0px)" }} />
-            <div className="coin-edge" style={{ transform: "translateZ(1.2px)" }} />
-            <div className="coin-face" style={{ transform: "translateZ(2px)" }}>
-              <CoinFace inscribed />
-            </div>
-            <div className="coin-face" style={{ transform: "rotateX(180deg) translateZ(2px)" }}>
-              <CoinFace />
-            </div>
+            {/* 厚度：用照片本身压暗叠几层，方孔也就跟着透 */}
+            {[-1.4, -0.5, 0.4, 1.3].map((z) => (
+              <img key={z} src={`/coins/${tag}-obverse.webp`} alt="" draggable={false} className="coin-edge" style={{ transform: `translateZ(${z}px)` }} />
+            ))}
+            <img src={`/coins/${tag}-obverse.webp`} alt="字面" draggable={false} className="coin-face" style={{ transform: "translateZ(2px)" }} />
+            <img src={`/coins/${tag}-reverse.webp`} alt="背面" draggable={false} className="coin-face" style={{ transform: "rotateX(180deg) translateZ(2px)" }} />
           </div>
         ))}
       </div>
     </div>
   );
 });
-
-function CoinFace({ inscribed = false }: { inscribed?: boolean }) {
-  const id = inscribed ? "f" : "b";
-  return (
-    <svg viewBox="0 0 100 100" className="h-full w-full" aria-hidden>
-      <defs>
-        <radialGradient id={`brass-${id}`} cx="38%" cy="32%" r="78%">
-          <stop offset="0%" stopColor="#e2cf9c" />
-          <stop offset="50%" stopColor="#c4a263" />
-          <stop offset="100%" stopColor="#6f5527" />
-        </radialGradient>
-        <filter id={`patina-${id}`} x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed={inscribed ? 3 : 7} />
-          <feColorMatrix type="matrix" values="0 0 0 0 0.25  0 0 0 0 0.32  0 0 0 0 0.22  0 0 0 0.55 0" />
-          <feComposite in2="SourceGraphic" operator="in" />
-        </filter>
-      </defs>
-      <circle cx="50" cy="50" r="48" fill={`url(#brass-${id})`} />
-      <circle cx="50" cy="50" r="48" filter={`url(#patina-${id})`} opacity="0.5" />
-      <circle cx="50" cy="50" r="47" fill="none" stroke="#5c4420" strokeWidth="2.4" opacity="0.8" />
-      <circle cx="50" cy="50" r="44.5" fill="none" stroke="#e2cf9c" strokeWidth="0.8" opacity="0.5" />
-      <rect x="40" y="40" width="20" height="20" fill="#0f1516" />
-      <rect x="38.5" y="38.5" width="23" height="23" fill="none" stroke="#5c4420" strokeWidth="1.6" opacity="0.9" />
-      <rect x="36.5" y="36.5" width="27" height="27" fill="none" stroke="#e2cf9c" strokeWidth="0.6" opacity="0.4" />
-      {inscribed && (
-        <g fontFamily="var(--font-display)" fontSize="17" fontWeight="700" textAnchor="middle">
-          <g fill="#e6d6a8" opacity="0.55">
-            <text x="50.6" y="32.6">赛</text>
-            <text x="50.6" y="82.6">博</text>
-            <text x="77.6" y="57.6">通</text>
-            <text x="23.6" y="57.6">宝</text>
-          </g>
-          <g fill="#3d2c12">
-            <text x="50" y="32">赛</text>
-            <text x="50" y="82">博</text>
-            <text x="77" y="57">通</text>
-            <text x="23" y="57">宝</text>
-          </g>
-        </g>
-      )}
-    </svg>
-  );
-}

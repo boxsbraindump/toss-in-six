@@ -27,3 +27,14 @@ Freesound 的文件是站点提供的 HQ 预览 MP3（原始 WAV 需登录下载
 |---|---|
 | public/textures/wood_table_worn.jpg | https://polyhaven.com/a/wood_table_worn |
 | public/textures/dark_wood.jpg | https://polyhaven.com/a/dark_wood |
+
+# 铜钱照片来源
+
+Wikimedia Commons，Gary Lee Todd 收藏，CC0 1.0。原图放 coins-src/（不入库），处理后贴图在 public/coins/。
+
+| 原图 | 页面 | 用途 |
+|---|---|---|
+| q364.jpg | https://commons.wikimedia.org/wiki/File:364_S-1464,_Qianlong,_1735-1796,_25mm.jpg | 铜钱 a |
+| q368.jpg | https://commons.wikimedia.org/wiki/File:368_S-1468,_Qianlong,_1735-1796,_25mm.jpg | 铜钱 b |
+| q376.jpg | https://commons.wikimedia.org/wiki/File:376_S-1478,_Qianlong,_1735-1796,_25mm.jpg | 铜钱 c |
+| q372.jpg | https://commons.wikimedia.org/wiki/File:372_S-1473,_Qianlong,_1735-1796,_25mm.jpg | 锈蚀过重，未用 |
