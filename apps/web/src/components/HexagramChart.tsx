@@ -106,21 +106,19 @@ function Row({ line, changedName, flashAt }: { line: ChartLine; changedName?: st
     <li className="grid min-h-10 grid-cols-[2.5rem_1fr] items-center gap-x-3 gap-y-0.5">
       <span className="text-xs text-bone-dim">{line.beast}</span>
       <div className="flex items-center gap-3">
-        <span className="flex min-w-24 shrink-0 items-baseline gap-2 text-sm leading-tight">
-          <span>
-            <span className="text-bone-dim">{line.relation}</span> {line.stem}{line.branch}
-            <span className="text-bone-dim">{line.element}</span>
-          </span>
-          {line.tags.length > 0 && <span className="font-display text-[11px] text-verdigris">{line.tags.join(" ")}</span>}
+        <span className="w-24 shrink-0 text-sm leading-tight">
+          <span className="text-bone-dim">{line.relation}</span> {line.stem}{line.branch}
+          <span className="text-bone-dim">{line.element}</span>
         </span>
         <span className={line.moving ? "rv-flash rounded-sm" : ""} style={line.moving ? delay(flashAt) : undefined}>
           <LineBar yang={line.yang} moving={line.moving} />
         </span>
-        <span className="flex w-10 items-center gap-1 text-xs">
+        <span className="flex w-10 shrink-0 items-center gap-1 text-xs">
           {line.moving && <span className="text-cinnabar">{line.yang ? "○" : "×"}</span>}
           {line.isShi && <Seal>世</Seal>}
           {line.isYing && <Seal muted>应</Seal>}
         </span>
+        {line.tags.length > 0 && <span className="font-display text-[11px] text-verdigris">{line.tags.join(" ")}</span>}
       </div>
       {line.change && (
         <span

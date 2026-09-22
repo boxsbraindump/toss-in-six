@@ -75,13 +75,22 @@ body {
   background-position: center, center, 30px 0;
   box-shadow: 0 6px 0 #1a1109, 0 30px 40px -12px rgba(0, 0, 0, 0.9);
 }
-.table-scene { --wood: url("/textures/wood_table_worn.jpg"); }
-.table-scene[data-wood="dark"] { --wood: url("/textures/dark_wood.jpg"); }
+.table-scene, .wood-bg { --wood: url("/textures/wood_table_worn.jpg"); }
+.table-scene[data-wood="dark"], .wood-bg[data-wood="dark"] { --wood: url("/textures/dark_wood.jpg"); }
+/* 结果页背景：很暗的木纹，上面压墨色，只留一点材质感 */
+.wood-bg {
+  background-image:
+    radial-gradient(ellipse 90% 70% at 50% 30%, rgba(20, 16, 12, 0.55), rgba(20, 16, 12, 0.92) 80%),
+    linear-gradient(rgba(20, 16, 12, 0.78), rgba(20, 16, 12, 0.78)),
+    var(--wood);
+  background-size: auto, auto, 640px 640px;
+  background-position: center, center, center;
+}
 /* 远处没入黑暗：贴在桌面上、越远越黑的雾 */
 .table-fog {
   position: absolute;
   inset: -900px -400px 0 -400px;
-  background: linear-gradient(180deg, #14100c 0%, #14100c 30%, rgba(20, 16, 12, 0.8) 50%, rgba(20, 16, 12, 0.3) 74%, transparent 100%);
+  background: linear-gradient(180deg, #14100c 0%, rgba(20, 16, 12, 0.92) 18%, rgba(20, 16, 12, 0.62) 42%, rgba(20, 16, 12, 0.22) 68%, transparent 100%);
   transform: translateZ(0.3px);
   pointer-events: none;
 }

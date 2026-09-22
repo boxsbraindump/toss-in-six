@@ -150,7 +150,13 @@ export function Divination() {
         <TossStage question={question} values={values} wood={wood} onLine={(v) => setValues((prev) => [...prev, v])} />
       )}
 
-      {stage === "result" && result && <HexagramChart key={castAt?.getTime()} result={result} />}
+      {stage === "result" && result && (
+        <>
+          {/* 桌子还在：结果页底下压一层很暗的木纹 */}
+          <div className="wood-bg pointer-events-none fixed inset-0 -z-10" data-wood={wood} aria-hidden />
+          <HexagramChart key={castAt?.getTime()} result={result} />
+        </>
+      )}
     </div>
   );
 }
@@ -404,17 +410,26 @@ function TossStage({ question, values, wood, onLine }: { question: string; value
             <span className="text-sm text-bone-dim">{hint}</span>
           )}
         </div>
-        <ol className="flex items-center gap-2.5" aria-label="已成之爻">
+        {/* 六个记号：未摇的是点，摇出的变成小爻符（一横 = 阳，两短横 = 阴，动爻朱砂） */}
+        <ol className="flex items-center gap-3" aria-label="已成之爻">
           {Array.from({ length: 6 }, (_, i) => {
             const v = values[i];
             const moving = v === 6 || v === 9;
+            const yang = v === 7 || v === 9;
+            const color = moving ? "bg-cinnabar shadow-[0_0_6px_rgba(210,74,50,0.9)]" : "bg-brass";
             return (
-              <li
-                key={i}
-                className={`h-1.5 w-1.5 rounded-full transition ${
-                  v ? (moving ? "bg-cinnabar shadow-[0_0_6px_rgba(210,74,50,0.9)]" : "bg-brass") : "bg-bone-dim/30"
-                }`}
-              />
+              <li key={i} className="flex h-2 w-4 items-center justify-center gap-[3px]" aria-label={v ? VALUE_NAME[v] : "未摇"}>
+                {!v ? (
+                  <span className="h-1.5 w-1.5 rounded-full bg-bone-dim/30" />
+                ) : yang ? (
+                  <span className={`line-enter h-[3px] w-4 rounded-[1px] ${color}`} />
+                ) : (
+                  <>
+                    <span className={`line-enter h-[3px] flex-1 rounded-[1px] ${color}`} />
+                    <span className={`line-enter h-[3px] flex-1 rounded-[1px] ${color}`} />
+                  </>
+                )}
+              </li>
             );
           })}
         </ol>

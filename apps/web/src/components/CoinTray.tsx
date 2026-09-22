@@ -26,9 +26,9 @@ const HAND: Pose[] = [
   { x: 38, y: 64, z: 32, rx: 0, ry: 0, rz: -5, tilt: 0, axis: 0 },
 ];
 const REST: Pose[] = [
-  { x: -80, y: 20, z: 0, rx: 0, ry: 0, rz: -30, tilt: 0, axis: 0 },
-  { x: 6, y: -10, z: 0, rx: 0, ry: 0, rz: 40, tilt: 0, axis: 0 },
-  { x: 86, y: 26, z: 0, rx: 0, ry: 0, rz: 10, tilt: 0, axis: 0 },
+  { x: -86, y: 18, z: 0, rx: 0, ry: 0, rz: -30, tilt: 0, axis: 0 },
+  { x: 0, y: -12, z: 0, rx: 0, ry: 0, rz: 40, tilt: 0, axis: 0 },
+  { x: 86, y: 18, z: 0, rx: 0, ry: 0, rz: 10, tilt: 0, axis: 0 },
 ];
 
 function rand(a: number, b: number): number {
@@ -49,7 +49,10 @@ function landingSpots(): { x: number; y: number }[] {
     if (spots.every((q) => Math.hypot(p.x - q.x, p.y - q.y) > 78)) spots.push(p);
   }
   while (spots.length < 3) spots.push({ x: rand(-105, 105), y: rand(-70, 40) });
-  return spots;
+  // 整组重心平移到中线，免得三枚碰巧都落到一边
+  const mx = spots.reduce((a, p) => a + p.x, 0) / 3;
+  const my = spots.reduce((a, p) => a + p.y, 0) / 3;
+  return spots.map((p) => ({ x: p.x - mx, y: p.y - my - 10 }));
 }
 
 type Mode =
