@@ -116,7 +116,20 @@ def cut(img, cx, cy, r):
     if binary.getpixel((best[1], best[2])) == 0:
         ImageDraw.floodfill(binary, (best[1], best[2]), 128)
     hole = binary.point(lambda p: 0 if p == 128 else 255)
-    hole = hole.filter(ImageFilter.MinFilter(9)).filter(ImageFilter.MaxFilter(9))  # 闭运算：填平孔里的亮线
+    # 开运算切断漏到孔外锈蚀暗区的细连接，再闭运算填平孔里的亮线
+    hole = hole.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.MinFilter(9))
+    hole = hole.filter(ImageFilter.MinFilter(9)).filter(ImageFilter.MaxFilter(9))
+    # 孔不可能超出中心 34% 的方框
+    lim = Image.new("L", (SIZE, SIZE), 255)
+    q0 = int(SIZE * 0.33)
+    q1 = int(SIZE * 0.67)
+    lim.paste(hole.crop((q0, q0, q1, q1)), (q0, q0))
+    # 方孔就是方的：用泛洪区域的外接矩形填一个干净的方孔（孔里的布纹亮线一并盖掉）
+    inv = lim.point(lambda p: 255 - p)
+    bb = inv.getbbox()
+    hole = Image.new("L", (SIZE, SIZE), 255)
+    if bb:
+        ImageDraw.Draw(hole).rounded_rectangle((bb[0] + 1, bb[1] + 1, bb[2] - 1, bb[3] - 1), radius=3, fill=0)
     hole = hole.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.GaussianBlur(0.7))
     alpha = Image.composite(alpha, Image.new("L", (SIZE, SIZE), 0), hole)
 
