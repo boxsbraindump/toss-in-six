@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "赛博六爻",
+  title: "摇六爻 · Toss in Six",
   description: "心中默念所问之事，摇六次铜钱，得一卦。",
 };
 

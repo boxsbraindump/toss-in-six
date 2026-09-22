@@ -123,7 +123,10 @@ export function Divination() {
   return (
     <div className="flex flex-1 flex-col gap-8">
       <header className="relative z-10 flex items-baseline justify-between">
-        <h1 className="font-display text-xl font-bold tracking-[0.3em] text-brass">赛博六爻</h1>
+        <h1 className="flex items-baseline gap-3">
+          <span className="font-display text-xl font-bold tracking-[0.3em] text-brass">摇六爻</span>
+          <span className="font-mono text-[11px] tracking-[0.2em] text-bone-dim">TOSS IN SIX</span>
+        </h1>
         <div className="flex items-baseline gap-4 text-sm text-bone-dim">
           <button onClick={toggleMute} aria-pressed={muted} className="hover:text-bone">
             {muted ? "声音 关" : "声音 开"}
