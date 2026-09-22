@@ -84,6 +84,75 @@ def find_circle(gray, box):
     return x0 + cx, y0 + cy, r
 
 
+def fit_circle(pts):
+    """Kasa 代数最小二乘拟合圆：x²+y²+ax+by+c=0"""
+    n = len(pts)
+    sx = sum(x for x, _ in pts); sy = sum(y for _, y in pts)
+    sxx = sum(x * x for x, _ in pts); syy = sum(y * y for _, y in pts); sxy = sum(x * y for x, y in pts)
+    sxz = sum(x * (x * x + y * y) for x, y in pts); syz = sum(y * (x * x + y * y) for x, y in pts); sz = sum(x * x + y * y for x, y in pts)
+    # 解 3x3 正规方程
+    A = [[sxx, sxy, sx], [sxy, syy, sy], [sx, sy, n]]
+    B = [-sxz, -syz, -sz]
+    # 高斯消元
+    for i in range(3):
+        piv = A[i][i]
+        for j in range(i, 3):
+            A[i][j] /= piv
+        B[i] /= piv
+        for k in range(3):
+            if k != i:
+                f = A[k][i]
+                for j in range(i, 3):
+                    A[k][j] -= f * A[i][j]
+                B[k] -= f * B[i]
+    a, b, c = B
+    cx, cy = -a / 2, -b / 2
+    r = math.sqrt(max(1e-9, cx * cx + cy * cy - c))
+    return cx, cy, r
+
+
+def refine_outer(img, cx, cy, r_est):
+    """全分辨率：360 条射线从外向内找布→钱的跳变点，拟合圆并剔除离群点"""
+    g = ImageOps.grayscale(img).filter(ImageFilter.GaussianBlur(2))
+    w, h = g.size
+    px = g.load()
+    # 布的亮度：1.25~1.35r 的环带
+    ring = []
+    for k in range(120):
+        a = 2 * math.pi * k / 120
+        for f in (1.25, 1.3, 1.35):
+            x, y = int(cx + f * r_est * math.cos(a)), int(cy + f * r_est * math.sin(a))
+            if 0 <= x < w and 0 <= y < h:
+                ring.append(px[x, y])
+    fabric = sorted(ring)[len(ring) // 2]
+    th = fabric + 55
+    pts = []
+    for k in range(360):
+        a = 2 * math.pi * k / 360
+        run = 0
+        for d in range(int(r_est * 1.3), int(r_est * 0.7), -1):
+            x, y = int(cx + d * math.cos(a)), int(cy + d * math.sin(a))
+            if not (0 <= x < w and 0 <= y < h):
+                run = 0
+                continue
+            run = run + 1 if px[x, y] > th else 0
+            if run >= 18:
+                dd = d + 18
+                pts.append((cx + dd * math.cos(a), cy + dd * math.sin(a)))
+                break
+    if len(pts) < 100:
+        return cx, cy, r_est
+    fx, fy, fr = fit_circle(pts)
+    for _ in range(2):
+        res = sorted(pts, key=lambda p: abs(math.hypot(p[0] - fx, p[1] - fy) - fr))
+        pts = res[: int(len(res) * 0.8)]
+        fx, fy, fr = fit_circle(pts)
+    # 半径不用拟合值（会被光晕撑大），取各射线到圆心距离的低分位数，宁可小一点
+    dist = sorted(math.hypot(p[0] - fx, p[1] - fy) for p in pts)
+    fr = dist[int(len(dist) * 0.1)]
+    return fx, fy, fr
+
+
 def cut(img, cx, cy, r):
     r *= 1.0
     box = (int(cx - r), int(cy - r), int(cx + r), int(cy + r))
@@ -171,9 +240,9 @@ def grade(face):
     d = ImageDraw.Draw(rim)
     for k in range(40):
         t = k / 40
-        r = big / 2 * (0.86 + 0.14 * t)
-        d.ellipse((big / 2 - r, big / 2 - r, big / 2 + r, big / 2 + r), outline=int(255 * (1 - 0.55 * t)), width=int(big * 0.14 / 40) + 2)
-    rim = rim.resize((SIZE, SIZE), Image.LANCZOS).filter(ImageFilter.GaussianBlur(3))
+        r = big / 2 * (0.95 + 0.05 * t)
+        d.ellipse((big / 2 - r, big / 2 - r, big / 2 + r, big / 2 + r), outline=int(255 * (1 - 0.35 * t)), width=int(big * 0.05 / 40) + 2)
+    rim = rim.resize((SIZE, SIZE), Image.LANCZOS).filter(ImageFilter.GaussianBlur(1.5))
     dark = Image.new("RGB", (SIZE, SIZE), (0, 0, 0))
     out = Image.composite(out, dark, rim)
 
@@ -201,14 +270,12 @@ def main():
             cx, cy, r = find_circle(gray, box)
             ox, oy, k = OVERRIDES.get(f"{tag}-{side}", (0, 0, 1))
             cx, cy, r = cx * 4 + ox * r * 4, cy * 4 + oy * r * 4, r * 4 * k
-            # 铜钱是铸的，方孔才是真正的中心：按方孔位置把圆心修正过去，再裁一次
-            face, (hx, hy) = cut(img, cx, cy, r)
-            px_per = 2 * r / SIZE
-            dx, dy = (hx - SIZE / 2) * px_per, (hy - SIZE / 2) * px_per
-            face, (hx2, hy2) = cut(img, cx + dx, cy + dy, r * 0.985)
+            fx, fy, fr = refine_outer(img, cx, cy, r)
+            face, (hx, hy) = cut(img, fx, fy, fr * 0.985)
+            off = (hx - SIZE / 2, hy - SIZE / 2)
             out = os.path.join(OUT, f"{tag}-{side}.webp")
             face.save(out, "WEBP", quality=86, method=6)
-            print(f"{name} {side}: 方孔偏离圆心 ({dx:+.0f},{dy:+.0f})px 已修正，复核偏差 ({hx2-SIZE/2:+.1f},{hy2-SIZE/2:+.1f}) → {os.path.basename(out)}")
+            print(f"{name} {side}: 拟合圆心 ({fx:.0f},{fy:.0f}) 半径 {fr:.0f}（粗估 {r:.0f}）  方孔偏离 ({off[0]:+.1f},{off[1]:+.1f})/512 → {os.path.basename(out)}")
 
 
 if __name__ == "__main__":

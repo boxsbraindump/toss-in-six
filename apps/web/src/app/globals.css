@@ -138,7 +138,8 @@ body {
   left: 50%;
   top: 50%;
   border-radius: 9999px;
-  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.45) 70%, transparent 100%);
+  /* 中心留淡一些：透过方孔要能看见桌面，只是偏暗 */
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.28) 0 20%, rgba(0, 0, 0, 0.7) 32%, rgba(0, 0, 0, 0.45) 70%, transparent 100%);
   pointer-events: none;
   will-change: transform, opacity;
 }
