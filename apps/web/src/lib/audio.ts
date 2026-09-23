@@ -8,6 +8,8 @@
  *   spin  — 转着落定的哗啦
  */
 
+import { asset } from "./base";
+
 const MUTE_KEY = "liuyao:muted";
 const EXCLUDE_KEY = "liuyao:sound:excluded";
 
@@ -139,14 +141,14 @@ export function preloadSamples(): Promise<void> {
   preloading = (async () => {
     const c = ctx;
     if (!c) return;
-    const res = await fetch("/sounds/lib/manifest.json");
+    const res = await fetch(asset("/sounds/lib/manifest.json"));
     if (!res.ok) throw new Error(`manifest ${res.status}`);
     manifest = (await res.json()) as Manifest;
     const all = (["shake", "land", "spin"] as Category[]).flatMap((k) => manifest![k]);
     await Promise.all(
       all.map(async (s) => {
         try {
-          const r = await fetch(`/sounds/lib/${s.file}`);
+          const r = await fetch(asset(`/sounds/lib/${s.file}`));
           const buf = await c.decodeAudioData(await r.arrayBuffer());
           buffers.set(s.file, buf);
         } catch {

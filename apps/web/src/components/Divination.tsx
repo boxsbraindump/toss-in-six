@@ -4,7 +4,7 @@ import { cast, tossLine, type CastResult, type CoinToss, type LineValue } from "
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { buzz, chime, ensureAudio, isMuted, rare, setMuted, settle, startShake, type ShakeHandle } from "@/lib/audio";
-import { CoinTray, type CoinTrayHandle, type Wood } from "./CoinTray";
+import { CoinTray, woodUrl, type CoinTrayHandle, type Wood } from "./CoinTray";
 import { HexagramChart } from "./HexagramChart";
 
 type Stage = "ask" | "toss" | "result";
@@ -153,7 +153,7 @@ export function Divination() {
       {stage === "result" && result && (
         <>
           {/* 桌子还在：结果页底下压一层很暗的木纹 */}
-          <div className="wood-bg pointer-events-none fixed inset-0 -z-10" data-wood={wood} aria-hidden />
+          <div className="wood-bg pointer-events-none fixed inset-0 -z-10" style={{ ["--wood" as string]: woodUrl(wood) } as React.CSSProperties} aria-hidden />
           <HexagramChart key={castAt?.getTime()} result={result} />
         </>
       )}

@@ -3,6 +3,7 @@
 import type { CoinToss } from "@liuyao/core";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { land as landFallback, scheduleLand } from "@/lib/audio";
+import { asset } from "@/lib/base";
 import { fallbackHits, planToss, poseTransform, type Pose, type TossPlan } from "@/lib/coinSim";
 
 export interface CoinTrayHandle {
@@ -62,6 +63,10 @@ type Mode =
   | { kind: "toss"; plans: TossPlan[]; start: number; landed: boolean[]; onLand?: (i: number) => void; resolve: () => void };
 
 export type Wood = "worn" | "dark";
+
+export function woodUrl(w: Wood): string {
+  return `url("${asset(w === "dark" ? "/textures/dark_wood.jpg" : "/textures/wood_table_worn.jpg")}")`;
+}
 
 export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: boolean; wood?: Wood }>(function CoinTray(
   { className = "", fill = false, wood = "worn" },
@@ -231,7 +236,7 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: 
       ref={scene}
       className={`table-scene ${fill ? "table-scene-fill" : ""} ${className}`}
       data-wood={wood}
-      style={fill ? undefined : { width: TABLE_W, height: TABLE_H * 0.62 + 90 }}
+      style={{ ...(fill ? {} : { width: TABLE_W, height: TABLE_H * 0.62 + 90 }), ["--wood" as string]: woodUrl(wood) } as React.CSSProperties}
     >
       <div ref={plane} className="table-plane" style={{ width: TABLE_W, height: TABLE_H }}>
         <div className="table-top" />
@@ -268,10 +273,10 @@ export const CoinTray = forwardRef<CoinTrayHandle, { className?: string; fill?: 
           >
             {/* 厚度：用照片本身压暗叠几层，方孔也就跟着透 */}
             {[-1.4, -0.5, 0.4, 1.3].map((z) => (
-              <img key={z} src={`/coins/${tag}-obverse.webp`} alt="" draggable={false} className="coin-edge" style={{ transform: `translateZ(${z}px)` }} />
+              <img key={z} src={asset(`/coins/${tag}-obverse.webp`)} alt="" draggable={false} className="coin-edge" style={{ transform: `translateZ(${z}px)` }} />
             ))}
-            <img src={`/coins/${tag}-obverse.webp`} alt="字面" draggable={false} className="coin-face" style={{ transform: "translateZ(2px)" }} />
-            <img src={`/coins/${tag}-reverse.webp`} alt="背面" draggable={false} className="coin-face" style={{ transform: "rotateX(180deg) translateZ(2px)" }} />
+            <img src={asset(`/coins/${tag}-obverse.webp`)} alt="字面" draggable={false} className="coin-face" style={{ transform: "translateZ(2px)" }} />
+            <img src={asset(`/coins/${tag}-reverse.webp`)} alt="背面" draggable={false} className="coin-face" style={{ transform: "rotateX(180deg) translateZ(2px)" }} />
           </div>
         ))}
       </div>
